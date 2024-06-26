@@ -2,9 +2,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Ums.Entities;
 
-public class UserRole : IdentityUserRole<Guid>
+public class RoleClaim : IdentityRoleClaim<Guid>
 {
-    public User User { get; set; }
-
     public Role Role { get; set; }
 }

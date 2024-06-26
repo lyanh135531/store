@@ -1,12 +1,11 @@
-using Domain.Core;
 using Infrastructure.EntityConfigurations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Migrator;
+namespace Infrastructure.Data;
 
-public class MigrationDbContext : DbContext
+public class ApplicationDbContext : DbContext
 {
-    public MigrationDbContext(DbContextOptions<MigrationDbContext> options) : base(options)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
     }
 

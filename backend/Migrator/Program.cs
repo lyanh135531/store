@@ -13,6 +13,7 @@ builder.Services.AddDbContext<MigrationDbContext>(options =>
     options.UseSqlServer(configuration.GetConnectionString("Default"));
 });
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
