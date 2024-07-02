@@ -2,11 +2,13 @@ using Api.Core;
 using Application.Core.DTOs;
 using Application.Ums.DTOs;
 using Application.Ums.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controller.Ums;
 
 [ApiController]
+[Authorize]
 [Route("/api/user")]
 public class UserController : ApiControllerBase<Guid, UserListDto, UserDetailDto, UserCreateDto, UserUpdateDto>
 {

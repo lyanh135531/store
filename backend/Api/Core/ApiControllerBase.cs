@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Core;
 
-[ApiController]
 public abstract class ApiControllerBase<TKey, TListDto, TDetailDto, TCreateDto, TUpdateDto>(
         IAppServiceBase<TKey, TListDto, TDetailDto, TCreateDto, TUpdateDto> appServiceBase)
     : ControllerBase where TDetailDto : class

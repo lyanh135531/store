@@ -47,8 +47,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseAuthentication();
 app.UseRouting();
-app.UseEndpoints(endPoints => endPoints.MapControllers());
+app.UseAuthorization();
+app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
 app.UseHttpsRedirection();
 
