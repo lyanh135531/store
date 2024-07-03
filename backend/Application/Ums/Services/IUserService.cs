@@ -6,4 +6,5 @@ namespace Application.Ums.Services;
 public interface IUserService : IAppServiceBase<Guid, UserListDto, UserDetailDto, UserCreateDto, UserUpdateDto>
 {
     Task<UserDetailDto> RegisterAdmin();
+    Task<UserDetailDto> CreateUser(UserCreateDto userCreateDto, CancellationToken cancellationToken = default);
 }

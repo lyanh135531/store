@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Ums.Entities;
 
-public class Role : IdentityRole<Guid>
+public class Role : IdentityRole<Guid>, IEntity<Guid>
 {
     public const string SystemAdminRole = "SYSTEM_ADMIN_ROLE";
     public string Code { get; set; }

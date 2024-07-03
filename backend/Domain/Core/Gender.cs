@@ -1,6 +1,6 @@
 namespace Domain.Core;
 
-public enum Gender
+public enum Gender : sbyte
 {
     Male,
     Female

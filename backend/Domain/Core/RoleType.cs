@@ -1,6 +1,6 @@
 namespace Domain.Core;
 
-public enum RoleType
+public enum RoleType : sbyte
 {
     Admin,
     Client

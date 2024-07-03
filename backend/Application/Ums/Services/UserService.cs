@@ -1,10 +1,10 @@
 using Application.Core.Services;
 using Application.Ums.DTOs;
 using AutoMapper;
-using Domain.Core;
 using Domain.Ums.Entities;
 using Domain.Ums.Repositories;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Ums.Services;
 
@@ -13,29 +13,45 @@ public class UserService : AppServiceBase<User, Guid, UserListDto, UserDetailDto
 {
     private readonly IMapper _mapper;
     private readonly UserManager<User> _userManager;
+    private readonly IRoleRepository _roleRepository;
     private const string PasswordAdmin = "Admin@123";
 
-    public UserService(IUserRepository userRepository, IMapper mapper, UserManager<User> userManager) : base(
+    public UserService(IUserRepository userRepository, IMapper mapper, UserManager<User> userManager,
+        IRoleRepository roleRepository) : base(
         userRepository, mapper)
     {
         _mapper = mapper;
         _userManager = userManager;
+        _roleRepository = roleRepository;
     }
 
     public async Task<UserDetailDto> RegisterAdmin()
     {
+        var roleQueryable = await _roleRepository.GetQueryableAsync();
+        var roleAdmin = await roleQueryable.FirstOrDefaultAsync(x => x.Code == Role.SystemAdminRole);
+
+        if (roleAdmin is null) throw new Exception("Role admin is null");
+
         var userAdmin = new User
         {
             UserName = "admin",
             Email = "admin@gmail.com",
             FullName = "Admin",
-            UserRoles = new List<UserRole>
-            {
-                new() { Role = new Role { Name = "Admin System", Code = Role.SystemAdminRole, Type = RoleType.Admin } }
-            }
+            UserRoles = new List<UserRole> { new() { RoleId = roleAdmin.Id } }
         };
         await _userManager.CreateAsync(userAdmin, PasswordAdmin);
+        await Repository.UpdateAsync(userAdmin, true);
 
         return _mapper.Map<User, UserDetailDto>(userAdmin);
+    }
+
+    public async Task<UserDetailDto> CreateUser(UserCreateDto userCreateDto,
+        CancellationToken cancellationToken = default)
+    {
+        var user = _mapper.Map<UserCreateDto, User>(userCreateDto);
+        await _userManager.CreateAsync(user, userCreateDto.Password);
+        await Repository.UpdateAsync(user, true);
+
+        return _mapper.Map<User, UserDetailDto>(user);
     }
 }

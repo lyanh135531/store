@@ -14,10 +14,15 @@ public static class UmsConfiguration
         {
             entity.ToTable(nameof(User), Schema);
             entity.HasKey(x => x.Id);
+            entity.HasIndex(x => x.UserName).IsUnique();
+            entity.HasIndex(x => x.Email).IsUnique();
             entity.Property(x => x.Id).HasDefaultValueSql("NEWID()");
-            entity.Property(x => x.Status).IsRequired().HasDefaultValue(true);
+            entity.Property(x => x.Status).IsRequired();
+            entity.Property(x => x.UserName).IsRequired().HasMaxLength(100);
+            entity.Property(x => x.Email).IsRequired().HasMaxLength(100);
             entity.Property(x => x.FullName).HasMaxLength(100);
-            entity.Property(x => x.DateOfBirth).HasDefaultValue(DateTime.Now);
+            entity.Property(x => x.DateOfBirth).HasDefaultValueSql("GETDATE()");
+            entity.Property(x => x.CreatedAt).HasDefaultValueSql("GETDATE()");
             entity.Property(x => x.Gender)
                 .HasConversion(v => v.ToString(), v => (Gender)Enum.Parse(typeof(Gender), v));
         });
@@ -26,10 +31,23 @@ public static class UmsConfiguration
         {
             entity.ToTable(nameof(Role), Schema);
             entity.HasKey(x => x.Id);
+            entity.HasIndex(x => x.Code).IsUnique();
             entity.Property(x => x.Id).HasDefaultValueSql("NEWID()");
-            entity.Property(x => x.Code).IsUnicode();
+            entity.Property(x => x.Code).HasMaxLength(100);
+            entity.Property(x => x.Name).HasMaxLength(100);
             entity.Property(x => x.Type)
                 .HasConversion(v => v.ToString(), v => (RoleType)Enum.Parse(typeof(RoleType), v));
+
+            entity.HasData(new List<Role>
+            {
+                new()
+                {
+                    Id = new Guid("F566FF19-37BE-4F82-8858-DF3B540B502C"),
+                    Name = "Admin Role",
+                    Code = Role.SystemAdminRole,
+                    Type = RoleType.Admin,
+                },
+            });
         });
 
         modelBuilder.Entity<UserRole>(entity =>
