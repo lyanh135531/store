@@ -10,7 +10,7 @@ public class
         TDetailDto, TCreateDto, TUpdateDto>
     where TEntity : class, IEntity<TKey>
     where TCreateDto : class
-    where TUpdateDto : class
+    where TUpdateDto : class, IEntityDto<TKey>
     where TDetailDto : class
 {
     protected readonly IRepository<TEntity, TKey> Repository;
@@ -23,13 +23,13 @@ public class
     }
 
 
-    public async Task<PaginatedList<TListDto>> GetListAsync(PaginatedListQuery query,
+    public virtual async Task<PaginatedList<TListDto>> GetListAsync(PaginatedListQuery query,
         CancellationToken cancellationToken = default)
     {
-        var qb = await Repository.GetQueryableAsync();
-        var entities = await qb.ToListAsync(cancellationToken);
+        var queryable = await Repository.GetQueryableAsync();
+        var total = await queryable.CountAsync(cancellationToken: cancellationToken);
+        var entities = await queryable.ToListAsync(cancellationToken);
         var result = _mapper.Map<List<TEntity>, List<TListDto>>(entities);
-        var total = await qb.CountAsync(cancellationToken: cancellationToken);
         return new PaginatedList<TListDto>(result, total, query.Offset, query.Limit);
     }
 
@@ -42,7 +42,11 @@ public class
 
     public virtual async Task<TDetailDto> UpdateAsync(TUpdateDto updateDto)
     {
-        var entity = _mapper.Map<TUpdateDto, TEntity>(updateDto);
+        var queryable = await Repository.GetQueryableAsync();
+        var entity = await queryable.FirstOrDefaultAsync(x => x.Id.Equals(updateDto.Id));
+        if (entity is null) throw new Exception("Not Found");
+
+        _mapper.Map(updateDto, entity);
         var entityNew = await Repository.UpdateAsync(entity, true);
         var result = _mapper.Map<TEntity, TDetailDto>(entityNew);
         return result;

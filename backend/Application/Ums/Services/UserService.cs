@@ -1,6 +1,8 @@
+using Application.Core.DTOs;
 using Application.Core.Services;
 using Application.Ums.DTOs;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain.Ums.Entities;
 using Domain.Ums.Repositories;
 using Microsoft.AspNetCore.Identity;
@@ -45,13 +47,29 @@ public class UserService : AppServiceBase<User, Guid, UserListDto, UserDetailDto
         return _mapper.Map<User, UserDetailDto>(userAdmin);
     }
 
-    public async Task<UserDetailDto> CreateUser(UserCreateDto userCreateDto,
-        CancellationToken cancellationToken = default)
+    public override async Task<UserDetailDto> CreateAsync(UserCreateDto userCreateDto)
     {
         var user = _mapper.Map<UserCreateDto, User>(userCreateDto);
         await _userManager.CreateAsync(user, userCreateDto.Password);
         await Repository.UpdateAsync(user, true);
 
         return _mapper.Map<User, UserDetailDto>(user);
+    }
+
+    public override async Task<PaginatedList<UserListDto>> GetListAsync(PaginatedListQuery query,
+        CancellationToken cancellationToken = default)
+    {
+        var queryable = await Repository.GetQueryableAsync();
+        queryable = queryable
+            .Where(x => !x.IsAdminRole());
+
+        var total = await queryable.CountAsync(cancellationToken);
+
+        var result = await queryable
+            .Where(x => !x.IsAdminRole())
+            .ProjectTo<UserListDto>(_mapper.ConfigurationProvider)
+            .ToListAsync(cancellationToken);
+
+        return new PaginatedList<UserListDto>(result, total, query.Offset, query.Limit);
     }
 }

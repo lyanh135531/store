@@ -24,11 +24,4 @@ public class UserController : ApiControllerBase<Guid, UserListDto, UserDetailDto
 
         return ApiResponse<UserDetailDto>.Ok(result);
     }
-
-    public override async Task<ApiResponse<UserDetailDto>> CreateAsync(UserCreateDto createDto)
-    {
-        var result = await _userService.CreateUser(createDto);
-
-        return ApiResponse<UserDetailDto>.Ok(result);
-    }
 }

@@ -1,5 +1,6 @@
 using Application.Core.DTOs;
 using Application.Core.Services;
+using Domain.Core;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Core;
@@ -8,7 +9,7 @@ public abstract class ApiControllerBase<TKey, TListDto, TDetailDto, TCreateDto, 
         IAppServiceBase<TKey, TListDto, TDetailDto, TCreateDto, TUpdateDto> appServiceBase)
     : ControllerBase where TDetailDto : class
     where TCreateDto : class
-    where TUpdateDto : class
+    where TUpdateDto : class, IEntityDto<TKey>
 {
     [HttpGet("list")]
     public virtual async Task<ApiResponse<PaginatedList<TListDto>>> GetListAsync([FromQuery] PaginatedListQuery query,
