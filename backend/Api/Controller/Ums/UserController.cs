@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Controller.Ums;
 
 [ApiController]
-[Route("/api/user")]
+[Route("/api/admin/user")]
 public class UserController : ApiControllerBase<Guid, UserListDto, UserDetailDto, UserCreateDto, UserUpdateDto>
 {
     private readonly IUserService _userService;

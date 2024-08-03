@@ -19,7 +19,7 @@ public abstract class ApiControllerBase<TKey, TListDto, TDetailDto, TCreateDto, 
         return ApiResponse<PaginatedList<TListDto>>.Ok(listResult);
     }
 
-    [HttpGet("detail")]
+    [HttpGet]
     public virtual async Task<ApiResponse<TDetailDto>> GetDetailAsync(TKey id,
         CancellationToken cancellationToken = default)
     {
@@ -34,7 +34,7 @@ public abstract class ApiControllerBase<TKey, TListDto, TDetailDto, TCreateDto, 
         }
     }
 
-    [HttpPost("create")]
+    [HttpPost]
     public virtual async Task<ApiResponse<TDetailDto>> CreateAsync([FromBody] TCreateDto createDto)
     {
         try
@@ -49,7 +49,7 @@ public abstract class ApiControllerBase<TKey, TListDto, TDetailDto, TCreateDto, 
         }
     }
 
-    [HttpPut("update")]
+    [HttpPut]
     public virtual async Task<ApiResponse<TDetailDto>> UpdateAsync([FromBody] TUpdateDto updateDto)
     {
         try
@@ -63,7 +63,7 @@ public abstract class ApiControllerBase<TKey, TListDto, TDetailDto, TCreateDto, 
         }
     }
 
-    [HttpDelete("delete")]
+    [HttpDelete]
     public virtual async Task<ApiResponse<TDetailDto>> DeleteAsync(TKey id)
     {
         try

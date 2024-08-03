@@ -14,10 +14,4 @@ public class User : IdentityUser<Guid>, IEntity<Guid>
     public DateTime CreatedAt { get; set; }
 
     public List<UserRole> UserRoles { get; set; } = new();
-
-    public bool IsAdminRole()
-    {
-        return UserRoles.Exists(x => x.Role.Code == Role.SystemAdminRole);
-    }
-    
 }

@@ -63,14 +63,20 @@ public class UserService : AppServiceBase<User, Guid, UserListDto, UserDetailDto
     public override async Task<PaginatedList<UserListDto>> GetListAsync(PaginatedListQuery query,
         CancellationToken cancellationToken = default)
     {
+        var roleQueryable = await _roleRepository.GetQueryableAsync();
+        var userAdminId = await roleQueryable
+            .Where(x => x.Code == Role.SystemAdminRole)
+            .SelectMany(x => x.UserRoles)
+            .Select(x => x.UserId)
+            .ToListAsync(cancellationToken);
+
         var queryable = await Repository.GetQueryableAsync();
         queryable = queryable
-            .Where(x => !x.IsAdminRole());
+            .Where(x => !userAdminId.Contains(x.Id));
 
         var total = await queryable.CountAsync(cancellationToken);
 
         var result = await queryable
-            .Where(x => !x.IsAdminRole())
             .ProjectTo<UserListDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
 

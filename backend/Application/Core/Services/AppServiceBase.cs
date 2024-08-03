@@ -16,7 +16,7 @@ public class
     protected readonly IRepository<TEntity, TKey> Repository;
     private readonly IMapper _mapper;
 
-    protected AppServiceBase(IRepository<TEntity, TKey> repository, IMapper mapper)
+    public AppServiceBase(IRepository<TEntity, TKey> repository, IMapper mapper)
     {
         Repository = repository;
         _mapper = mapper;
