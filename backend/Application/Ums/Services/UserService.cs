@@ -17,6 +17,7 @@ public class UserService : AppServiceBase<User, Guid, UserListDto, UserDetailDto
     private readonly UserManager<User> _userManager;
     private readonly IRoleRepository _roleRepository;
     private const string PasswordAdmin = "Admin@123";
+    private const string EmailAdmin = "admin@gmail.com";
 
     public UserService(IUserRepository userRepository, IMapper mapper, UserManager<User> userManager,
         IRoleRepository roleRepository) : base(
@@ -29,6 +30,9 @@ public class UserService : AppServiceBase<User, Guid, UserListDto, UserDetailDto
 
     public async Task<UserDetailDto> RegisterAdmin()
     {
+        var userAdminExist = await _userManager.FindByEmailAsync(EmailAdmin);
+        if (userAdminExist != null) throw new Exception("User admin is exist");
+        
         var roleQueryable = await _roleRepository.GetQueryableAsync();
         var roleAdmin = await roleQueryable.FirstOrDefaultAsync(x => x.Code == Role.SystemAdminRole);
 
