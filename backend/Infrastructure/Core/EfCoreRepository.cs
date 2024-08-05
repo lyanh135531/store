@@ -4,19 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Core;
 
-public class EfCoreRepository<TEntity, TKey> : IEfCoreRepository<TEntity, TKey>, IRepository<TEntity, TKey>
+public class EfCoreRepository<TEntity, TKey>(ApplicationDbContext applicationDbContext)
+    : IEfCoreRepository<TEntity, TKey>, IRepository<TEntity, TKey>
     where TEntity : class, IEntity<TKey>
 {
-    private readonly ApplicationDbContext _applicationDbContext;
-
-    protected EfCoreRepository(ApplicationDbContext applicationDbContext)
-    {
-        _applicationDbContext = applicationDbContext;
-    }
-
     private Task<DbSet<TEntity>> GetDbSetAsync()
     {
-        return Task.FromResult(_applicationDbContext.Set<TEntity>());
+        return Task.FromResult(applicationDbContext.Set<TEntity>());
     }
 
     public virtual async Task<TEntity> FindAsync(TKey id, bool isTracking = true,
@@ -46,10 +40,10 @@ public class EfCoreRepository<TEntity, TKey> : IEfCoreRepository<TEntity, TKey>,
 
     public virtual async Task<TEntity> AddAsync(TEntity entity, bool autoSave = false)
     {
-        var saveEntity = _applicationDbContext.AddAsync(entity).Result.Entity;
+        var saveEntity = applicationDbContext.AddAsync(entity).Result.Entity;
         if (autoSave)
         {
-            await _applicationDbContext.SaveChangesAsync();
+            await applicationDbContext.SaveChangesAsync();
         }
 
         return saveEntity;
@@ -57,10 +51,10 @@ public class EfCoreRepository<TEntity, TKey> : IEfCoreRepository<TEntity, TKey>,
 
     public virtual async Task<TEntity> UpdateAsync(TEntity entity, bool autoSave)
     {
-        var updateEntity = _applicationDbContext.Update(entity).Entity;
+        var updateEntity = applicationDbContext.Update(entity).Entity;
         if (autoSave)
         {
-            await _applicationDbContext.SaveChangesAsync();
+            await applicationDbContext.SaveChangesAsync();
         }
 
         return updateEntity;
@@ -69,10 +63,10 @@ public class EfCoreRepository<TEntity, TKey> : IEfCoreRepository<TEntity, TKey>,
     public virtual async Task<TEntity> DeleteAsync(TKey id, bool autoSave = false)
     {
         var entity = await FindAsync(id);
-        _applicationDbContext.Remove(entity);
+        applicationDbContext.Remove(entity);
         if (autoSave)
         {
-            await _applicationDbContext.SaveChangesAsync();
+            await applicationDbContext.SaveChangesAsync();
         }
 
         return entity;

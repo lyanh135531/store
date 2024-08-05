@@ -6,10 +6,24 @@ using Domain.Business.Repositories;
 
 namespace Application.Business.Services.Products;
 
-public class ProductService :
-    AppServiceBase<Product, Guid, ProductListDto, ProductDetailDto, ProductCreateDto, ProductUpdateDto>, IProductService
+public class ProductService(IProductRepository productRepository, IMapper mapper) :
+    AppServiceBase<Product, Guid, ProductListDto, ProductDetailDto, ProductCreateDto, ProductUpdateDto>(
+        productRepository, mapper), IProductService
 {
-    public ProductService(IProductRepository productRepository, IMapper mapper) : base(productRepository, mapper)
+    private readonly IMapper _mapper = mapper;
+
+    public override async Task<ProductDetailDto> CreateAsync(ProductCreateDto createDto)
     {
+        var product = _mapper.Map<ProductCreateDto, Product>(createDto);
+        product.Code = await GenerateCodeAsync();
+        var productNew = await Repository.AddAsync(product, true);
+        var result = _mapper.Map<Product, ProductDetailDto>(productNew);
+        return result;
+    }
+
+    private async Task<string> GenerateCodeAsync()
+    {
+        var sequenceNumber = await productRepository.GetNextSequenceNumberAsync();
+        return $"P{sequenceNumber:D4}";
     }
 }
