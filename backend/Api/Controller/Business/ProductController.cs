@@ -1,9 +1,6 @@
 using Api.Core;
 using Application.Business.DTOs.Products;
 using Application.Business.Services.Products;
-using Application.Core.DTOs;
-using Application.Ums.DTOs;
-using Application.Ums.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controller.Business;

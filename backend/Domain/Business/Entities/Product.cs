@@ -2,7 +2,7 @@ using Domain.Core;
 
 namespace Domain.Business.Entities;
 
-public class Product : AuditableEntity<Guid>
+public class Product : AuditableEntity
 {
     public string Code { get; set; }
     public string Name { get; set; }

@@ -1,6 +1,6 @@
 namespace Domain.Core;
 
-public class AuditableEntity<TKey> : Entity<TKey>
+public class AuditableEntity : Entity<Guid>
 {
     public DateTime CreatedTime { get; set; }
     public string CreatedBy { get; set; }
