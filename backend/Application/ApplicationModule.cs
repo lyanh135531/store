@@ -1,7 +1,7 @@
+using System.Reflection;
+using Application.Business.Services.Categories;
 using Application.Business.Services.Products;
-using Application.Ums.Mapper;
 using Application.Ums.Services;
-using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
@@ -10,13 +10,7 @@ public static class ApplicationModule
 {
     public static void AddApplication(this IServiceCollection service)
     {
-        #region Mapper
-
-        var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile<UserMapper>(); });
-        var mapper = mapperConfig.CreateMapper();
-        service.AddSingleton(mapper);
-
-        #endregion
+        service.AddAutoMapper(Assembly.GetExecutingAssembly());
 
         #region Ums
 
@@ -27,6 +21,7 @@ public static class ApplicationModule
         #region Business
 
         service.AddTransient<IProductService, ProductService>();
+        service.AddTransient<ICategoryService, CategoryService>();
 
         #endregion
     }

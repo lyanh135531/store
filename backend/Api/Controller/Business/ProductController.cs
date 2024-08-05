@@ -10,10 +10,10 @@ namespace Api.Controller.Business;
 public class
     ProductController : ApiControllerBase<Guid, ProductListDto, ProductDetailDto, ProductCreateDto, ProductUpdateDto>
 {
-    private readonly IProductService _userService;
+    private readonly IProductService _productService;
 
-    public ProductController(IProductService userService) : base(userService)
+    public ProductController(IProductService productService) : base(productService)
     {
-        _userService = userService;
+        _productService = productService;
     }
 }

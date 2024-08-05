@@ -5,9 +5,5 @@ using Infrastructure.Data;
 
 namespace Infrastructure.Repositories.Business;
 
-public class OrderRepository : EfCoreRepository<Order, Guid>, IOrderRepository
-{
-    public OrderRepository(ApplicationDbContext applicationDbContext) : base(applicationDbContext)
-    {
-    }
-}
+public class OrderRepository(ApplicationDbContext applicationDbContext)
+    : EfCoreRepository<Order, Guid>(applicationDbContext), IOrderRepository;

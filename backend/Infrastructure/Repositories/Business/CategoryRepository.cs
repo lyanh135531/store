@@ -5,9 +5,5 @@ using Infrastructure.Data;
 
 namespace Infrastructure.Repositories.Business;
 
-public class CategoryRepository : EfCoreRepository<Category, Guid>, ICategoryRepository
-{
-    public CategoryRepository(ApplicationDbContext applicationDbContext) : base(applicationDbContext)
-    {
-    }
-}
+public class CategoryRepository(ApplicationDbContext applicationDbContext)
+    : EfCoreRepository<Category, Guid>(applicationDbContext), ICategoryRepository;
