@@ -22,7 +22,7 @@ namespace Migrator.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Business.Entities.Category", b =>
+            modelBuilder.Entity("Domain.Business.Category", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -43,7 +43,7 @@ namespace Migrator.Migrations
                     b.ToTable("Category", "store");
                 });
 
-            modelBuilder.Entity("Domain.Business.Entities.Order", b =>
+            modelBuilder.Entity("Domain.Business.Order", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -79,7 +79,7 @@ namespace Migrator.Migrations
                     b.ToTable("Order", "store");
                 });
 
-            modelBuilder.Entity("Domain.Business.Entities.OrderDetail", b =>
+            modelBuilder.Entity("Domain.Business.OrderDetail", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -107,7 +107,7 @@ namespace Migrator.Migrations
                     b.ToTable("OrderDetail", "store");
                 });
 
-            modelBuilder.Entity("Domain.Business.Entities.Product", b =>
+            modelBuilder.Entity("Domain.Business.Product", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -363,7 +363,7 @@ namespace Migrator.Migrations
                     b.ToTable("UserToken", "ums");
                 });
 
-            modelBuilder.Entity("Domain.Business.Entities.Order", b =>
+            modelBuilder.Entity("Domain.Business.Order", b =>
                 {
                     b.HasOne("Domain.Ums.Entities.User", "User")
                         .WithMany()
@@ -374,15 +374,15 @@ namespace Migrator.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Domain.Business.Entities.OrderDetail", b =>
+            modelBuilder.Entity("Domain.Business.OrderDetail", b =>
                 {
-                    b.HasOne("Domain.Business.Entities.Order", "Order")
+                    b.HasOne("Domain.Business.Order", "Order")
                         .WithMany("OrderDetails")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Business.Entities.Product", "Product")
+                    b.HasOne("Domain.Business.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -393,9 +393,9 @@ namespace Migrator.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("Domain.Business.Entities.Product", b =>
+            modelBuilder.Entity("Domain.Business.Product", b =>
                 {
-                    b.HasOne("Domain.Business.Entities.Category", "Category")
+                    b.HasOne("Domain.Business.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -434,12 +434,12 @@ namespace Migrator.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Domain.Business.Entities.Category", b =>
+            modelBuilder.Entity("Domain.Business.Category", b =>
                 {
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("Domain.Business.Entities.Order", b =>
+            modelBuilder.Entity("Domain.Business.Order", b =>
                 {
                     b.Navigation("OrderDetails");
                 });
