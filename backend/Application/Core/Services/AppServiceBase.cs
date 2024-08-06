@@ -23,6 +23,7 @@ public class
         CancellationToken cancellationToken = default)
     {
         var queryable = await Repository.GetQueryableAsync();
+        queryable = queryable.ApplyPaginatedFilter(query);
         var total = await queryable.CountAsync(cancellationToken: cancellationToken);
         var entities = await queryable
             .ApplyPaginatedListQuery(query)
