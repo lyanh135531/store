@@ -3,6 +3,7 @@ using Application.Core.Services;
 using Application.Ums.DTOs;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Domain.Core;
 using Domain.Ums.Entities;
 using Domain.Ums.Repositories;
 using Microsoft.AspNetCore.Identity;
@@ -14,38 +15,47 @@ public class UserService : AppServiceBase<User, Guid, UserListDto, UserDetailDto
     IUserService
 {
     private readonly IMapper _mapper;
+    private readonly RoleManager<Role> _roleManager;
     private readonly UserManager<User> _userManager;
     private readonly IRoleRepository _roleRepository;
     private const string PasswordAdmin = "Admin@123";
     private const string EmailAdmin = "admin@gmail.com";
 
     public UserService(IUserRepository userRepository, IMapper mapper, UserManager<User> userManager,
-        IRoleRepository roleRepository) : base(
+        IRoleRepository roleRepository, RoleManager<Role> roleManager) : base(
         userRepository, mapper)
     {
         _mapper = mapper;
         _userManager = userManager;
         _roleRepository = roleRepository;
+        _roleManager = roleManager;
     }
 
     public async Task<UserDetailDto> RegisterAdmin()
     {
         var userAdminExist = await _userManager.FindByEmailAsync(EmailAdmin);
         if (userAdminExist != null) throw new Exception("User admin is exist");
-        
-        var roleQueryable = await _roleRepository.GetQueryableAsync();
-        var roleAdmin = await roleQueryable.FirstOrDefaultAsync(x => x.Code == Role.SystemAdminRole);
 
-        if (roleAdmin is null) throw new Exception("Role admin is null");
+        var roleAdminExist = await _roleManager.FindByNameAsync(Role.Admin);
+        if (roleAdminExist != null) throw new Exception("Role admin is exist");
+
+        var roleAdmin = new Role
+        {
+            Name = Role.Admin,
+            Code = Role.SystemAdminRoleCode,
+            Type = RoleType.Admin,
+        };
+
+        await _roleManager.CreateAsync(roleAdmin);
 
         var userAdmin = new User
         {
             UserName = "admin",
             Email = "admin@gmail.com",
             FullName = "Admin",
-            UserRoles = new List<UserRole> { new() { RoleId = roleAdmin.Id } }
         };
         await _userManager.CreateAsync(userAdmin, PasswordAdmin);
+        await _userManager.AddToRoleAsync(userAdmin, Role.Admin);
         await Repository.UpdateAsync(userAdmin, true);
 
         return _mapper.Map<User, UserDetailDto>(userAdmin);
@@ -65,7 +75,7 @@ public class UserService : AppServiceBase<User, Guid, UserListDto, UserDetailDto
     {
         var roleQueryable = await _roleRepository.GetQueryableAsync();
         var userAdminId = await roleQueryable
-            .Where(x => x.Code == Role.SystemAdminRole)
+            .Where(x => x.Code == Role.SystemAdminRoleCode)
             .SelectMany(x => x.UserRoles)
             .Select(x => x.UserId)
             .ToListAsync(cancellationToken);

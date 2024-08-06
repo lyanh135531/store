@@ -1,17 +1,19 @@
 using Domain.Core;
+using Infrastructure.Core;
 using Infrastructure.EntityConfigurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data;
 
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ICurrentUser currentUser)
+    : DbContext(options)
 {
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.UmsEntities();
         modelBuilder.StoreEntities();
-
-        base.OnModelCreating(modelBuilder);
     }
 
     public override int SaveChanges()
@@ -39,10 +41,12 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             if (entityEntry.State == EntityState.Added)
             {
                 auditableEntity.CreatedTime = DateTime.Now;
+                auditableEntity.CreatedBy = currentUser.Id;
             }
             else
             {
                 auditableEntity.LastModifiedTime = DateTime.Now;
+                auditableEntity.LastModifiedBy = currentUser.Id;
             }
         }
     }

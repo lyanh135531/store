@@ -1,6 +1,7 @@
 using System.Reflection;
 using Application.Business.Services.Categories;
 using Application.Business.Services.Products;
+using Application.Core.Services;
 using Application.Ums.Services;
 using Microsoft.Extensions.DependencyInjection;
 

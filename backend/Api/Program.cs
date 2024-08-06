@@ -8,29 +8,48 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
+var services = builder.Services;
 
-builder.Services.AddApplication();
-builder.Services.AddInfrastructure();
-builder.Services.AddControllers();
+services.AddApplication();
+services.AddInfrastructure();
+services.AddControllers();
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+services.AddHttpContextAccessor();
+
+services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(configuration.GetConnectionString("Default"));
 });
 
-builder.Services.AddDbContext<IdentityContext>(options =>
+services.AddDbContext<IdentityContext>(options =>
 {
     options.UseSqlServer(configuration.GetConnectionString("Default"));
 });
 
-builder.Services.AddIdentity<User, Role>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
+services.AddIdentity<User, Role>(options =>
+    {
+        options.Password.RequireDigit = true;
+        options.Password.RequireLowercase = true;
+        options.Password.RequireUppercase = true;
+        options.Password.RequireNonAlphanumeric = true;
+        options.Password.RequiredLength = 6;
+        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+        options.Lockout.MaxFailedAccessAttempts = 5;
+        options.User.RequireUniqueEmail = true;
+    })
+    .AddEntityFrameworkStores<IdentityContext>()
     .AddDefaultTokenProviders();
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.Name = "STORE";
+    options.LoginPath = "/api/identity/login";
+    options.LogoutPath = "/api/identity/logout";
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+});
 
-builder.Services.AddSwaggerGen(c =>
+services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo() { Title = "Store", Version = "v1" });
     c.CustomSchemaIds(i => i.FullName);
@@ -38,7 +57,6 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -51,7 +69,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseRouting();
 app.UseAuthentication();
-// app.UseAuthorization();
+app.UseAuthorization();
 app.MapControllers();
 app.UseHttpsRedirection();
 app.Run();

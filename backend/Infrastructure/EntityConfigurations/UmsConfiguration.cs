@@ -37,17 +37,6 @@ public static class UmsConfiguration
             entity.Property(x => x.Name).HasMaxLength(100);
             entity.Property(x => x.Type)
                 .HasConversion(v => v.ToString(), v => (RoleType)Enum.Parse(typeof(RoleType), v));
-
-            entity.HasData(new List<Role>
-            {
-                new()
-                {
-                    Id = new Guid("F566FF19-37BE-4F82-8858-DF3B540B502C"),
-                    Name = "Admin Role",
-                    Code = Role.SystemAdminRole,
-                    Type = RoleType.Admin,
-                },
-            });
         });
 
         modelBuilder.Entity<UserRole>(entity =>

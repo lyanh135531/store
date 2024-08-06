@@ -1,12 +1,14 @@
 using Application.Core.DTOs;
 using Application.Core.Services;
 using Domain.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Models;
 
 namespace Api.Core;
 
 public abstract class ApiControllerBase<TKey, TListDto, TDetailDto, TCreateDto, TUpdateDto>(
-        IAppServiceBase<TKey, TListDto, TDetailDto, TCreateDto, TUpdateDto> appServiceBase)
+    IAppServiceBase<TKey, TListDto, TDetailDto, TCreateDto, TUpdateDto> appServiceBase)
     : ControllerBase where TDetailDto : class
     where TCreateDto : class
     where TUpdateDto : class, IEntityDto<TKey>

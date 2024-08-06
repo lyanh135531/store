@@ -1,19 +1,16 @@
 using Api.Core;
 using Application.Business.DTOs.Products;
 using Application.Business.Services.Products;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controller.Business;
 
 [ApiController]
 [Route("/api/admin/product")]
+[Authorize]
 public class
-    ProductController : ApiControllerBase<Guid, ProductListDto, ProductDetailDto, ProductCreateDto, ProductUpdateDto>
+    ProductController(IProductService productService)
+    : ApiControllerBase<Guid, ProductListDto, ProductDetailDto, ProductCreateDto, ProductUpdateDto>(productService)
 {
-    private readonly IProductService _productService;
-
-    public ProductController(IProductService productService) : base(productService)
-    {
-        _productService = productService;
-    }
 }

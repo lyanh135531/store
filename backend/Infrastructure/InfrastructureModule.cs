@@ -1,5 +1,6 @@
 using Domain.Business.Repositories;
 using Domain.Ums.Repositories;
+using Infrastructure.Core;
 using Infrastructure.Repositories.Business;
 using Infrastructure.Repositories.Ums;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +11,8 @@ public static class InfrastructureModule
 {
     public static void AddInfrastructure(this IServiceCollection service)
     {
+        service.AddScoped<ICurrentUser, CurrentUser>();
+
         #region Ums
 
         service.AddTransient<IUserRepository, UserRepository>();

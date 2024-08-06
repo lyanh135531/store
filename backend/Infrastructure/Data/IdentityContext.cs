@@ -5,16 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data;
 
-public class IdentityContext : IdentityDbContext<User, Role, Guid, UserClaim, UserRole, UserLogin, RoleClaim, UserToken>
+public class IdentityContext(DbContextOptions<IdentityContext> options)
+    : IdentityDbContext<User, Role, Guid, UserClaim, UserRole, UserLogin, RoleClaim, UserToken>(options)
 {
-    public IdentityContext(DbContextOptions<IdentityContext> options) : base(options)
-    {
-    }
-
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.UmsEntities();
-
         base.OnModelCreating(builder);
+
+        builder.UmsEntities();
     }
 }

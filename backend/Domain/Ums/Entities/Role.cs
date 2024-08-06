@@ -5,7 +5,8 @@ namespace Domain.Ums.Entities;
 
 public class Role : IdentityRole<Guid>, IEntity<Guid>
 {
-    public const string SystemAdminRole = "SYSTEM_ADMIN_ROLE";
+    public const string SystemAdminRoleCode = "SYSTEM_ADMIN_ROLE";
+    public const string Admin = "Admin";
     public string Code { get; set; }
     public RoleType Type { get; set; }
 
