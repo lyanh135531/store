@@ -1,4 +1,5 @@
 using Application.Core.DTOs;
+using Application.Core.Extensions;
 using AutoMapper;
 using Domain.Core;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +24,9 @@ public class
     {
         var queryable = await Repository.GetQueryableAsync();
         var total = await queryable.CountAsync(cancellationToken: cancellationToken);
-        var entities = await queryable.ToListAsync(cancellationToken);
+        var entities = await queryable
+            .ApplyPaginatedListQuery(query)
+            .ToListAsync(cancellationToken);
         var result = mapper.Map<List<TEntity>, List<TListDto>>(entities);
         return new PaginatedList<TListDto>(result, total, query.Offset, query.Limit);
     }

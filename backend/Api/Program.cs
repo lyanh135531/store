@@ -1,5 +1,8 @@
+using System.Reflection;
 using Application;
 using Domain.Ums.Entities;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Infrastructure;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
@@ -14,17 +17,28 @@ services.AddApplication();
 services.AddInfrastructure();
 services.AddControllers();
 
+#region Validator
+
+services.AddFluentValidationAutoValidation()
+    .AddFluentValidationClientsideAdapters();
+services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+#endregion
+
 services.AddHttpContextAccessor();
+
+#region DbContext
 
 services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(configuration.GetConnectionString("Default"));
 });
-
 services.AddDbContext<IdentityContext>(options =>
 {
     options.UseSqlServer(configuration.GetConnectionString("Default"));
 });
+
+#endregion
 
 services.AddIdentity<User, Role>(options =>
     {
@@ -40,6 +54,8 @@ services.AddIdentity<User, Role>(options =>
     .AddEntityFrameworkStores<IdentityContext>()
     .AddDefaultTokenProviders();
 
+#region Cookie
+
 services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.Name = "STORE";
@@ -48,6 +64,8 @@ services.ConfigureApplicationCookie(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
+
+#endregion
 
 services.AddSwaggerGen(c =>
 {
