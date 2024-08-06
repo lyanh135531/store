@@ -4,6 +4,7 @@ using Domain.Ums.Entities;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Infrastructure;
+using Infrastructure.Common;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -83,6 +84,13 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Store Api");
         c.RoutePrefix = string.Empty;
     });
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var seedFolderPath = Path.Combine(app.Environment.ContentRootPath, "../Migrator/Script");
+    SeedData.Seed(context, seedFolderPath);
 }
 
 app.UseRouting();
