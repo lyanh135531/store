@@ -6,7 +6,7 @@ namespace Infrastructure.EntityConfigurations;
 
 public static class UmsConfiguration
 {
-    private static readonly string Schema = "ums";
+    private const string Schema = "ums";
 
     public static void UmsEntities(this ModelBuilder modelBuilder)
     {

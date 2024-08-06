@@ -5,9 +5,5 @@ using Infrastructure.Data;
 
 namespace Infrastructure.Repositories.Ums;
 
-public class UserRepository : EfCoreRepository<User, Guid>, IUserRepository
-{
-    public UserRepository(ApplicationDbContext applicationDbContext) : base(applicationDbContext)
-    {
-    }
-}
+public class UserRepository(ApplicationDbContext applicationDbContext)
+    : EfCoreRepository<User, Guid>(applicationDbContext), IUserRepository;

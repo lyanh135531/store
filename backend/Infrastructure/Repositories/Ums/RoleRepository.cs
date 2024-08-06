@@ -5,9 +5,5 @@ using Infrastructure.Data;
 
 namespace Infrastructure.Repositories.Ums;
 
-public class RoleRepository : EfCoreRepository<Role, Guid>, IRoleRepository
-{
-    public RoleRepository(ApplicationDbContext applicationDbContext) : base(applicationDbContext)
-    {
-    }
-}
+public class RoleRepository(ApplicationDbContext applicationDbContext)
+    : EfCoreRepository<Role, Guid>(applicationDbContext), IRoleRepository;

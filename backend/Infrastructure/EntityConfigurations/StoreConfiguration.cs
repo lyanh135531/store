@@ -5,7 +5,7 @@ namespace Infrastructure.EntityConfigurations;
 
 public static class StoreConfiguration
 {
-    private static readonly string Schema = "store";
+    private const string Schema = "store";
 
     public static void StoreEntities(this ModelBuilder modelBuilder)
     {
