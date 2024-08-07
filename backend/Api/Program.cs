@@ -1,4 +1,5 @@
 using System.Reflection;
+using Api.Middlewares;
 using Application;
 using Application.Configs;
 using Domain.Ums.Entities;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -23,6 +25,15 @@ services.AddControllers();
 services.AddHttpContextAccessor();
 services.AddSingleton<DatabaseUpdater>();
 services.Configure<FileConfig>(configuration.GetSection("FileConfig"));
+
+#region Serilog
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger();
+builder.Host.UseSerilog();
+
+#endregion
 
 #region Validator
 
@@ -124,6 +135,8 @@ app.UseStaticFiles(new StaticFileOptions
 });
 
 #endregion
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseRouting();
 app.UseAuthentication();

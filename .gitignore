@@ -226,3 +226,4 @@ AppPackages/
 #####
 
 backend/Api/UploadFiles/*
+backend/Api/Logs/*
