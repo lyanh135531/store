@@ -111,7 +111,7 @@ public class FileService(
     private Guid GetFileEntryId(IFormFile file, FileEntryCollection fileEntryCollection)
     {
         var fileEntryId = fileEntryCollection.FileEntries
-            .Where(x => x.Name == file.FileName)
+            .Where(x => x.FileName == file.FileName)
             .Select(x => x.Id)
             .FirstOrDefault();
 

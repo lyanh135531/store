@@ -4,9 +4,9 @@ namespace Domain.Files.Entities;
 
 public class FileEntry : AuditableEntity
 {
-    public string Name { get; set; }
+    public string FileName { get; set; }
     public string Extension { get; set; }
-    public int Size { get; set; }
+    public int Length { get; set; }
     public string ContentType { get; set; }
 
     public Guid? FileEntryCollectionId { get; set; }

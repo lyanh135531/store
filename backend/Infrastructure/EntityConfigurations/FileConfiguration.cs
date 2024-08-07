@@ -14,7 +14,7 @@ public static class FileConfiguration
             entity.ToTable(nameof(FileEntry), Schema);
             entity.HasKey(x => x.Id);
             entity.Property(x => x.Id).HasDefaultValueSql("NEWID()");
-            entity.Property(x => x.Name).IsRequired().HasMaxLength(100);
+            entity.Property(x => x.FileName).IsRequired().HasMaxLength(100);
             entity.Property(x => x.Extension).IsRequired().HasMaxLength(20);
             entity.Property(x => x.ContentType).IsRequired().HasMaxLength(100);
 
