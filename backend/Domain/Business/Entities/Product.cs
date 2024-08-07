@@ -1,5 +1,4 @@
 using Domain.Core;
-using Domain.Files;
 using Domain.Files.Entities;
 
 namespace Domain.Business.Entities;

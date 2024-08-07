@@ -6,11 +6,20 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Migrator.Migrations
 {
     /// <inheritdoc />
-    public partial class AddFileEntry : Migration
+    public partial class AddFileEntryEntity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "LastModifiedTime",
+                schema: "store",
+                table: "Product",
+                type: "datetime2",
+                nullable: true,
+                oldClrType: typeof(DateTime),
+                oldType: "datetime2");
+
             migrationBuilder.AddColumn<Guid>(
                 name: "FileEntryCollectionId",
                 schema: "store",
@@ -18,6 +27,15 @@ namespace Migrator.Migrations
                 type: "uniqueidentifier",
                 nullable: false,
                 defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
+
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "LastModifiedTime",
+                schema: "store",
+                table: "Order",
+                type: "datetime2",
+                nullable: true,
+                oldClrType: typeof(DateTime),
+                oldType: "datetime2");
 
             migrationBuilder.CreateTable(
                 name: "FileEntryCollection",
@@ -36,15 +54,13 @@ namespace Migrator.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Path = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FullPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Extension = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Size = table.Column<int>(type: "int", nullable: false),
                     ContentType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FileEntryCollectionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastModifiedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModifiedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -61,8 +77,7 @@ namespace Migrator.Migrations
                 name: "IX_Product_FileEntryCollectionId",
                 schema: "store",
                 table: "Product",
-                column: "FileEntryCollectionId",
-                unique: true);
+                column: "FileEntryCollectionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FileEntry_FileEntryCollectionId",
@@ -102,6 +117,28 @@ namespace Migrator.Migrations
                 name: "FileEntryCollectionId",
                 schema: "store",
                 table: "Product");
+
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "LastModifiedTime",
+                schema: "store",
+                table: "Product",
+                type: "datetime2",
+                nullable: false,
+                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                oldClrType: typeof(DateTime),
+                oldType: "datetime2",
+                oldNullable: true);
+
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "LastModifiedTime",
+                schema: "store",
+                table: "Order",
+                type: "datetime2",
+                nullable: false,
+                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                oldClrType: typeof(DateTime),
+                oldType: "datetime2",
+                oldNullable: true);
         }
     }
 }

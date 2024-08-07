@@ -162,8 +162,7 @@ namespace Migrator.Migrations
                         .IsUnique()
                         .HasFilter("[Code] IS NOT NULL");
 
-                    b.HasIndex("FileEntryCollectionId")
-                        .IsUnique();
+                    b.HasIndex("FileEntryCollectionId");
 
                     b.ToTable("Product", "store");
                 });
@@ -467,8 +466,8 @@ namespace Migrator.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Files.Entities.FileEntryCollection", "FileEntryCollection")
-                        .WithOne()
-                        .HasForeignKey("Domain.Business.Entities.Product", "FileEntryCollectionId")
+                        .WithMany()
+                        .HasForeignKey("FileEntryCollectionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

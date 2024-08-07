@@ -12,8 +12,8 @@ using Migrator;
 namespace Migrator.Migrations
 {
     [DbContext(typeof(MigrationDbContext))]
-    [Migration("20240807070117_NullableLastModifiedTime")]
-    partial class NullableLastModifiedTime
+    [Migration("20240807080933_AddFileEntryEntity")]
+    partial class AddFileEntryEntity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -165,8 +165,7 @@ namespace Migrator.Migrations
                         .IsUnique()
                         .HasFilter("[Code] IS NOT NULL");
 
-                    b.HasIndex("FileEntryCollectionId")
-                        .IsUnique();
+                    b.HasIndex("FileEntryCollectionId");
 
                     b.ToTable("Product", "store");
                 });
@@ -192,9 +191,6 @@ namespace Migrator.Migrations
                     b.Property<Guid?>("FileEntryCollectionId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("FullPath")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -202,9 +198,6 @@ namespace Migrator.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Path")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Size")
@@ -476,8 +469,8 @@ namespace Migrator.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Files.Entities.FileEntryCollection", "FileEntryCollection")
-                        .WithOne()
-                        .HasForeignKey("Domain.Business.Entities.Product", "FileEntryCollectionId")
+                        .WithMany()
+                        .HasForeignKey("FileEntryCollectionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
