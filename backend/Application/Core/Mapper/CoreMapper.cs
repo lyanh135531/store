@@ -10,6 +10,10 @@ public class CoreMapper : Profile
     {
         CreateMap<IFormFile, FileEntry>()
             .ForMember(x => x.Size, opt => opt
-                .MapFrom(s => s.Length));
+                .MapFrom(s => s.Length))
+            .ForMember(x => x.Extension, opt => opt
+                .MapFrom(s => Path.GetExtension(s.FileName)))
+            .ForMember(x => x.Name, opt => opt
+                .MapFrom(s => s.FileName));
     }
 }

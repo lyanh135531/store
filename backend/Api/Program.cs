@@ -22,7 +22,7 @@ services.AddControllers();
 
 services.AddHttpContextAccessor();
 services.AddSingleton<DatabaseUpdater>();
-services.Configure<FileConfig>(configuration);
+services.Configure<FileConfig>(configuration.GetSection("FileConfig"));
 
 #region Validator
 

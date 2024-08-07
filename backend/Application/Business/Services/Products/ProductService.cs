@@ -6,7 +6,7 @@ using Domain.Business.Repositories;
 
 namespace Application.Business.Services.Products;
 
-public class ProductService(IProductRepository productRepository, IMapper mapper) :
+public class ProductService(IProductRepository productRepository, IMapper mapper, IFileService fileService) :
     AppServiceBase<Product, Guid, ProductListDto, ProductDetailDto, ProductCreateDto, ProductUpdateDto>(
         productRepository, mapper), IProductService
 {
@@ -16,6 +16,7 @@ public class ProductService(IProductRepository productRepository, IMapper mapper
     {
         var product = _mapper.Map<ProductCreateDto, Product>(createDto);
         product.Code = await GenerateCodeAsync();
+        product.FileEntryCollectionId = await fileService.UploadMultiFileAsync(createDto.Files);
         var productNew = await Repository.AddAsync(product, true);
         var result = _mapper.Map<Product, ProductDetailDto>(productNew);
         return result;

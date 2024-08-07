@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http;
+
 namespace Application.Business.DTOs.Products;
 
 public class ProductCreateDto
@@ -7,4 +9,6 @@ public class ProductCreateDto
     public string Description { get; set; }
 
     public Guid CategoryId { get; set; }
+
+    public List<IFormFile> Files { get; set; }
 }
