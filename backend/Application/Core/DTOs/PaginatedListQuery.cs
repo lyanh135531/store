@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace Application.Core.DTOs;
 
 public class PaginatedListQuery

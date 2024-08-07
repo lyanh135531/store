@@ -8,6 +8,7 @@ using Infrastructure.Common;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +28,7 @@ services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 #endregion
 
 services.AddHttpContextAccessor();
+services.AddSingleton<DatabaseUpdater>();
 
 #region DbContext
 
@@ -86,12 +88,28 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+#region DbUp
+
 using (var scope = app.Services.CreateScope())
 {
-    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    var seedFolderPath = Path.Combine(app.Environment.ContentRootPath, "../Migrator/Script");
-    SeedData.Seed(context, seedFolderPath);
+    try
+    {
+        var databaseUpdater = scope.ServiceProvider.GetRequiredService<DatabaseUpdater>();
+        databaseUpdater.Upgrade();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"An error occurred while migrating the database: {ex.Message}");
+    }
 }
+
+#endregion
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(builder.Environment.ContentRootPath, "UploadFiles")),
+});
 
 app.UseRouting();
 app.UseAuthentication();
