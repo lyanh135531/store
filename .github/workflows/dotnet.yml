@@ -20,13 +20,12 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
-    - name: Change directory to API folder
-      run: cd backend/Api && echo "Current directory is $(pwd)"
-    - name: List files
-      run: ls -la
     - name: Restore dependencies
       run: dotnet restore
+      working-directory: backend/Api
     - name: Build
       run: dotnet build --no-restore
+      working-directory: backend/Api
     - name: Test
       run: dotnet test --no-build --verbosity normal
+      working-directory: backend/Api
