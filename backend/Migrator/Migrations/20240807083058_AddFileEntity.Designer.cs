@@ -12,8 +12,8 @@ using Migrator;
 namespace Migrator.Migrations
 {
     [DbContext(typeof(MigrationDbContext))]
-    [Migration("20240807081257_UpdateColumnFileEntry")]
-    partial class UpdateColumnFileEntry
+    [Migration("20240807083058_AddFileEntity")]
+    partial class AddFileEntity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -174,10 +174,13 @@ namespace Migrator.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<string>("ContentType")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -186,13 +189,17 @@ namespace Migrator.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Extension")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<Guid?>("FileEntryCollectionId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FileName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
@@ -207,18 +214,19 @@ namespace Migrator.Migrations
 
                     b.HasIndex("FileEntryCollectionId");
 
-                    b.ToTable("FileEntry");
+                    b.ToTable("FileEntry", "dbo");
                 });
 
             modelBuilder.Entity("Domain.Files.Entities.FileEntryCollection", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.HasKey("Id");
 
-                    b.ToTable("FileEntryCollection");
+                    b.ToTable("FileEntryCollection", "dbo");
                 });
 
             modelBuilder.Entity("Domain.Ums.Entities.Role", b =>
@@ -483,7 +491,8 @@ namespace Migrator.Migrations
                 {
                     b.HasOne("Domain.Files.Entities.FileEntryCollection", "FileEntryCollection")
                         .WithMany("FileEntries")
-                        .HasForeignKey("FileEntryCollectionId");
+                        .HasForeignKey("FileEntryCollectionId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("FileEntryCollection");
                 });

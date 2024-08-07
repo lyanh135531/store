@@ -14,6 +14,7 @@ public class MigrationDbContext : DbContext
     {
         modelBuilder.UmsEntities();
         modelBuilder.StoreEntities();
+        modelBuilder.FileEntities();
 
         base.OnModelCreating(modelBuilder);
     }

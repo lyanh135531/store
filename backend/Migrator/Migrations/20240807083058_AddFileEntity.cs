@@ -6,11 +6,14 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Migrator.Migrations
 {
     /// <inheritdoc />
-    public partial class AddFileEntryEntity : Migration
+    public partial class AddFileEntity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "dbo");
+
             migrationBuilder.AlterColumn<DateTime>(
                 name: "LastModifiedTime",
                 schema: "store",
@@ -39,9 +42,10 @@ namespace Migrator.Migrations
 
             migrationBuilder.CreateTable(
                 name: "FileEntryCollection",
+                schema: "dbo",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()")
                 },
                 constraints: table =>
                 {
@@ -50,13 +54,14 @@ namespace Migrator.Migrations
 
             migrationBuilder.CreateTable(
                 name: "FileEntry",
+                schema: "dbo",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Extension = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Size = table.Column<int>(type: "int", nullable: false),
-                    ContentType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
+                    FileName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Extension = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Length = table.Column<int>(type: "int", nullable: false),
+                    ContentType = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     FileEntryCollectionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -69,8 +74,10 @@ namespace Migrator.Migrations
                     table.ForeignKey(
                         name: "FK_FileEntry_FileEntryCollection_FileEntryCollectionId",
                         column: x => x.FileEntryCollectionId,
+                        principalSchema: "dbo",
                         principalTable: "FileEntryCollection",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -81,6 +88,7 @@ namespace Migrator.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_FileEntry_FileEntryCollectionId",
+                schema: "dbo",
                 table: "FileEntry",
                 column: "FileEntryCollectionId");
 
@@ -89,6 +97,7 @@ namespace Migrator.Migrations
                 schema: "store",
                 table: "Product",
                 column: "FileEntryCollectionId",
+                principalSchema: "dbo",
                 principalTable: "FileEntryCollection",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
@@ -103,10 +112,12 @@ namespace Migrator.Migrations
                 table: "Product");
 
             migrationBuilder.DropTable(
-                name: "FileEntry");
+                name: "FileEntry",
+                schema: "dbo");
 
             migrationBuilder.DropTable(
-                name: "FileEntryCollection");
+                name: "FileEntryCollection",
+                schema: "dbo");
 
             migrationBuilder.DropIndex(
                 name: "IX_Product_FileEntryCollectionId",
