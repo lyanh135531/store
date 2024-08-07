@@ -1,7 +1,9 @@
 using Domain.Business.Repositories;
+using Domain.Files.Repositories;
 using Domain.Ums.Repositories;
 using Infrastructure.Core;
 using Infrastructure.Repositories.Business;
+using Infrastructure.Repositories.Files;
 using Infrastructure.Repositories.Ums;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -26,6 +28,13 @@ public static class InfrastructureModule
         service.AddTransient<IOrderRepository, OrderRepository>();
         service.AddTransient<IOrderDetailRepository, OrderDetailRepository>();
         service.AddTransient<ICategoryRepository, CategoryRepository>();
+
+        #endregion
+
+        #region Core
+
+        service.AddTransient<IFileEntryRepository, FileEntryRepository>();
+        service.AddTransient<IFileEntryCollectionRepository, FileEntryCollectionRepository>();
 
         #endregion
     }

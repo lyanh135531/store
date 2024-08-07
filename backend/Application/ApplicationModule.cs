@@ -13,6 +13,12 @@ public static class ApplicationModule
     {
         service.AddAutoMapper(Assembly.GetExecutingAssembly());
 
+        #region Core
+
+        service.AddTransient<IFileService, FileService>();
+
+        #endregion
+
         #region Ums
 
         service.AddTransient<IUserService, UserService>();

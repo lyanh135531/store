@@ -1,6 +1,6 @@
 ﻿using Domain.Core;
 
-namespace Domain.Files;
+namespace Domain.Files.Entities;
 
 public class FileEntry : AuditableEntity
 {

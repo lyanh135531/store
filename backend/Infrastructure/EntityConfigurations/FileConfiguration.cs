@@ -1,5 +1,6 @@
 using Domain.Core;
 using Domain.Files;
+using Domain.Files.Entities;
 using Domain.Ums.Entities;
 using Microsoft.EntityFrameworkCore;
 

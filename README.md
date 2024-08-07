@@ -7,3 +7,4 @@ DbUp
 Identity
 EFCore
 FluentValidation
+Github Actions

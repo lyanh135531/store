@@ -1,5 +1,6 @@
 using System.Reflection;
 using Application;
+using Application.Configs;
 using Domain.Ums.Entities;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -19,6 +20,10 @@ services.AddApplication();
 services.AddInfrastructure();
 services.AddControllers();
 
+services.AddHttpContextAccessor();
+services.AddSingleton<DatabaseUpdater>();
+services.Configure<FileConfig>(configuration);
+
 #region Validator
 
 services.AddFluentValidationAutoValidation()
@@ -26,9 +31,6 @@ services.AddFluentValidationAutoValidation()
 services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
 #endregion
-
-services.AddHttpContextAccessor();
-services.AddSingleton<DatabaseUpdater>();
 
 #region DbContext
 
@@ -42,6 +44,8 @@ services.AddDbContext<IdentityContext>(options =>
 });
 
 #endregion
+
+#region Identity
 
 services.AddIdentity<User, Role>(options =>
     {
@@ -57,6 +61,8 @@ services.AddIdentity<User, Role>(options =>
     .AddEntityFrameworkStores<IdentityContext>()
     .AddDefaultTokenProviders();
 
+#endregion
+
 #region Cookie
 
 services.ConfigureApplicationCookie(options =>
@@ -70,11 +76,15 @@ services.ConfigureApplicationCookie(options =>
 
 #endregion
 
+#region SwaggerGen
+
 services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo() { Title = "Store", Version = "v1" });
     c.CustomSchemaIds(i => i.FullName);
 });
+
+#endregion
 
 var app = builder.Build();
 
@@ -105,11 +115,15 @@ using (var scope = app.Services.CreateScope())
 
 #endregion
 
+#region StaticFiles
+
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(
         Path.Combine(builder.Environment.ContentRootPath, "UploadFiles")),
 });
+
+#endregion
 
 app.UseRouting();
 app.UseAuthentication();
