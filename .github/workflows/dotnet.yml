@@ -21,7 +21,7 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: Change directory to API folder
-      run: cd backend/Api/
+      run: cd backend/Api && echo "Current directory is $(pwd)"
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
