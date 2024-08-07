@@ -23,6 +23,11 @@ public static class StoreConfiguration
                 .WithMany(x => x.Products)
                 .HasForeignKey(x => x.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
+            
+            entity.HasOne(x => x.FileEntryCollection)
+                .WithOne()
+                .HasForeignKey<Product>(x => x.FileEntryCollectionId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<Category>(entity =>
