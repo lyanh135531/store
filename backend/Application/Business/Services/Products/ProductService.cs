@@ -3,18 +3,17 @@ using Application.Core.Services;
 using AutoMapper;
 using Domain.Business.Entities;
 using Domain.Business.Repositories;
-using Domain.Core;
 using Microsoft.Extensions.Caching.Distributed;
 
 namespace Application.Business.Services.Products;
 
 public class ProductService(
-    IRepository<Product, Guid> repository,
+    IProductRepository productRepository,
     IDistributedCache distributedCache,
     IMapper mapper,
-    IFileService fileService,
-    IProductRepository productRepository)
-    : AppServiceBase<Product, Guid, ProductListDto, ProductDetailDto, ProductCreateDto, ProductUpdateDto>(repository,
+    IFileService fileService)
+    : AppServiceBase<Product, Guid, ProductListDto, ProductDetailDto, ProductCreateDto, ProductUpdateDto>(
+        productRepository,
         distributedCache, mapper), IProductService
 {
     private readonly IMapper _mapper = mapper;

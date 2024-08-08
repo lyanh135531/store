@@ -13,13 +13,14 @@ using Microsoft.Extensions.Caching.Distributed;
 namespace Application.Ums.Services;
 
 public class UserService(
-    IRepository<User, Guid> repository,
+    IUserRepository userRepository,
     IDistributedCache distributedCache,
     IMapper mapper,
     UserManager<User> userManager,
     RoleManager<Role> roleManager,
     IRoleRepository roleRepository)
-    : AppServiceBase<User, Guid, UserListDto, UserDetailDto, UserCreateDto, UserUpdateDto>(repository, distributedCache,
+    : AppServiceBase<User, Guid, UserListDto, UserDetailDto, UserCreateDto, UserUpdateDto>(userRepository,
+        distributedCache,
         mapper), IUserService
 {
     private readonly IMapper _mapper = mapper;

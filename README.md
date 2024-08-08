@@ -2,10 +2,12 @@
 
 Clean Architecture
 Repository pattern
+EFCore
+Identity
 Auto mapper
 DbUp
-Identity
-EFCore
 FluentValidation
 Github Actions
 Middleware
+Redis
+Serilog
