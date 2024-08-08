@@ -8,17 +8,19 @@ using Domain.Ums.Entities;
 using Domain.Ums.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace Application.Ums.Services;
 
 public class UserService(
-    IUserRepository userRepository,
+    IRepository<User, Guid> repository,
+    IDistributedCache distributedCache,
     IMapper mapper,
     UserManager<User> userManager,
-    IRoleRepository roleRepository,
-    RoleManager<Role> roleManager)
-    : AppServiceBase<User, Guid, UserListDto, UserDetailDto, UserCreateDto, UserUpdateDto>(userRepository, mapper),
-        IUserService
+    RoleManager<Role> roleManager,
+    IRoleRepository roleRepository)
+    : AppServiceBase<User, Guid, UserListDto, UserDetailDto, UserCreateDto, UserUpdateDto>(repository, distributedCache,
+        mapper), IUserService
 {
     private readonly IMapper _mapper = mapper;
     private const string PasswordAdmin = "Admin@123";

@@ -3,14 +3,18 @@ using Application.Core.Extensions;
 using AutoMapper;
 using Domain.Core;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
 
 namespace Application.Core.Services;
 
 public class
     AppServiceBase<TEntity, TKey, TListDto, TDetailDto, TCreateDto, TUpdateDto>(
         IRepository<TEntity, TKey> repository,
-        IMapper mapper) : IAppServiceBase<TKey, TListDto,
-    TDetailDto, TCreateDto, TUpdateDto>
+        IDistributedCache distributedCache,
+        IMapper mapper)
+    : IAppServiceBase<TKey, TListDto,
+        TDetailDto, TCreateDto, TUpdateDto>
     where TEntity : class, IEntity<TKey>
     where TCreateDto : class
     where TUpdateDto : class, IEntityDto<TKey>
@@ -18,10 +22,18 @@ public class
 {
     protected readonly IRepository<TEntity, TKey> Repository = repository;
 
+    private const string ListCacheKey = $"{nameof(TEntity)}ListCache";
+    private const string DetailCacheKey = $"{nameof(TEntity)}DetailCache";
 
     public virtual async Task<PaginatedList<TListDto>> GetListAsync(PaginatedListQuery query,
         CancellationToken cancellationToken = default)
     {
+        var entitiesCache = await distributedCache.GetStringAsync(ListCacheKey, cancellationToken);
+        if (!string.IsNullOrEmpty(entitiesCache))
+        {
+            return JsonConvert.DeserializeObject<PaginatedList<TListDto>>(entitiesCache);
+        }
+
         var queryable = await Repository.GetQueryableAsync();
         queryable = queryable.ApplyPaginatedFilter(query);
         var total = await queryable.CountAsync(cancellationToken: cancellationToken);
@@ -29,13 +41,24 @@ public class
             .ApplyPaginatedListQuery(query)
             .ToListAsync(cancellationToken);
         var result = mapper.Map<List<TEntity>, List<TListDto>>(entities);
-        return new PaginatedList<TListDto>(result, total, query.Offset, query.Limit);
+        var paginatedList = new PaginatedList<TListDto>(result, total, query.Offset, query.Limit);
+        var valueCache = JsonConvert.SerializeObject(paginatedList);
+        await SetCaching(ListCacheKey, valueCache, cancellationToken);
+        return paginatedList;
     }
 
     public virtual async Task<TDetailDto> GetDetailAsync(TKey id, CancellationToken cancellationToken = default)
     {
+        var entityCache = await distributedCache.GetStringAsync(DetailCacheKey, cancellationToken);
+        if (!string.IsNullOrEmpty(entityCache))
+        {
+            return JsonConvert.DeserializeObject<TDetailDto>(entityCache);
+        }
+
         var entity = await Repository.FindAsync(id, cancellationToken: cancellationToken);
         var result = mapper.Map<TEntity, TDetailDto>(entity);
+        var valueCache = JsonConvert.SerializeObject(result);
+        await SetCaching(DetailCacheKey, valueCache, cancellationToken);
         return result ?? throw new Exception("Not Found!");
     }
 
@@ -48,6 +71,7 @@ public class
         mapper.Map(updateDto, entity);
         var entityNew = await Repository.UpdateAsync(entity, true);
         var result = mapper.Map<TEntity, TDetailDto>(entityNew);
+        await RemoveCaching();
         return result;
     }
 
@@ -56,6 +80,7 @@ public class
         var entity = mapper.Map<TCreateDto, TEntity>(createDto);
         var entityNew = await Repository.AddAsync(entity, true);
         var result = mapper.Map<TEntity, TDetailDto>(entityNew);
+        await RemoveCaching();
         return result;
     }
 
@@ -63,6 +88,21 @@ public class
     {
         var entity = await Repository.DeleteAsync(id, true);
         var result = mapper.Map<TEntity, TDetailDto>(entity);
+        await RemoveCaching();
         return result;
+    }
+
+    private async Task SetCaching(string cacheKey, string value, CancellationToken cancellationToken)
+    {
+        var options = new DistributedCacheEntryOptions()
+            .SetAbsoluteExpiration(DateTime.Now.AddMinutes(10))
+            .SetSlidingExpiration(TimeSpan.FromMinutes(5));
+        await distributedCache.SetStringAsync(cacheKey, value, options, cancellationToken);
+    }
+
+    private async Task RemoveCaching()
+    {
+        await distributedCache.RemoveAsync(ListCacheKey);
+        await distributedCache.RemoveAsync(DetailCacheKey);
     }
 }

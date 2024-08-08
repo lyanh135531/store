@@ -5,7 +5,7 @@ public class PaginatedListQuery
     public int Offset { get; set; }
     public int Limit { get; set; } = 10;
 
-    public List<Filter> Filters { get; set; }
+    public List<Filter> Filters { get; set; } = [];
 }
 
 public class Filter

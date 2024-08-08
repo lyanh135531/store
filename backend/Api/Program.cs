@@ -25,6 +25,7 @@ services.AddControllers();
 services.AddHttpContextAccessor();
 services.AddSingleton<DatabaseUpdater>();
 services.Configure<FileConfig>(configuration.GetSection("FileConfig"));
+builder.Services.AddStackExchangeRedisCache(options => { options.Configuration = configuration["RedisCacheUrl"]; });
 
 #region Serilog
 
