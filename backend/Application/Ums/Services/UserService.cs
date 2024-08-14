@@ -18,7 +18,8 @@ public class UserService(
     IMapper mapper,
     UserManager<User> userManager,
     RoleManager<Role> roleManager,
-    IRoleRepository roleRepository)
+    IRoleRepository roleRepository,
+    IEmailService emailService)
     : AppServiceBase<User, Guid, UserListDto, UserDetailDto, UserCreateDto, UserUpdateDto>(userRepository,
         distributedCache,
         mapper), IUserService
@@ -63,7 +64,25 @@ public class UserService(
         await userManager.CreateAsync(user, userCreateDto.Password);
         await Repository.UpdateAsync(user, true);
 
+        await SendMail(user);
+
         return _mapper.Map<User, UserDetailDto>(user);
+    }
+
+    private async Task SendMail(User user)
+    {
+        var replaceEmailDto = new UserReplaceEmailDto
+        {
+            Name = user.FullName
+        };
+        await emailService.SendMail(new SendMailDto
+        {
+            To = user.Email,
+            Name = user.UserName,
+            Subject = "Welcome",
+            TemplateName = "EmailTemplateCreateUser",
+            ReplaceDto = replaceEmailDto
+        });
     }
 
     public override async Task<PaginatedList<UserListDto>> GetListAsync(PaginatedListQuery query,

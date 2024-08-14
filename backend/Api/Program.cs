@@ -1,3 +1,5 @@
+using System.Net;
+using System.Net.Mail;
 using System.Reflection;
 using Api.Middlewares;
 using Application;
@@ -25,6 +27,7 @@ services.AddControllers();
 services.AddHttpContextAccessor();
 services.AddSingleton<DatabaseUpdater>();
 services.Configure<FileConfig>(configuration.GetSection("FileConfig"));
+services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));
 builder.Services.AddStackExchangeRedisCache(options => { options.Configuration = configuration["RedisCacheUrl"]; });
 
 #region Serilog
