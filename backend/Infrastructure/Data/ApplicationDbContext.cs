@@ -15,6 +15,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         modelBuilder.UmsEntities();
         modelBuilder.StoreEntities();
         modelBuilder.FileEntities();
+        modelBuilder.EmailEntities();
     }
 
     public override int SaveChanges()
