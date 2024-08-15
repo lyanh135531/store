@@ -75,5 +75,35 @@ public static class StoreConfiguration
                 .HasForeignKey(x => x.ProductId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
+
+        modelBuilder.Entity<Cart>(entity =>
+        {
+            entity.ToTable(nameof(Cart), Schema);
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.Id).HasDefaultValueSql("NEWID()");
+
+            entity.HasOne(x => x.User)
+                .WithMany()
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<CartDetail>(entity =>
+        {
+            entity.ToTable(nameof(CartDetail), Schema);
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.Id).HasDefaultValueSql("NEWID()");
+            entity.Property(x => x.Price).HasPrecision(18, 2);
+
+            entity.HasOne(x => x.Cart)
+                .WithMany(x => x.CartDetails)
+                .HasForeignKey(x => x.CartId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(x => x.Product)
+                .WithMany()
+                .HasForeignKey(x => x.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
     }
 }
