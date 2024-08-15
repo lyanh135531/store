@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using Domain.Core;
 using Microsoft.AspNetCore.Identity;
 
@@ -14,4 +15,27 @@ public class User : IdentityUser<Guid>, IEntity<Guid>
     public DateTime CreatedAt { get; set; }
 
     public List<UserRole> UserRoles { get; set; } = new();
+
+    #region Domain Event
+
+    private readonly List<BaseEvent> _domainEvents = new();
+
+    [NotMapped] public IReadOnlyCollection<BaseEvent> DomainEvents => _domainEvents.AsReadOnly();
+
+    public void AddDomainEvent(BaseEvent domainEvent)
+    {
+        _domainEvents.Add(domainEvent);
+    }
+
+    public void RemoveDomainEvent(BaseEvent domainEvent)
+    {
+        _domainEvents.Remove(domainEvent);
+    }
+
+    public void ClearDomainEvents()
+    {
+        _domainEvents.Clear();
+    }
+
+    #endregion
 }

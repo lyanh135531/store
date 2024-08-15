@@ -1,6 +1,6 @@
 ﻿using Domain.Core;
 
-namespace Domain.Emails;
+namespace Domain.Emails.Entities;
 
 public class EmailMessage : Entity<Guid>
 {

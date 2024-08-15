@@ -5,7 +5,9 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Core;
 using Domain.Ums.Entities;
+using Domain.Ums.Events;
 using Domain.Ums.Repositories;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
@@ -19,7 +21,7 @@ public class UserService(
     UserManager<User> userManager,
     RoleManager<Role> roleManager,
     IRoleRepository roleRepository,
-    IEmailService emailService)
+    IMediator mediator)
     : AppServiceBase<User, Guid, UserListDto, UserDetailDto, UserCreateDto, UserUpdateDto>(userRepository,
         distributedCache,
         mapper), IUserService
@@ -64,25 +66,9 @@ public class UserService(
         await userManager.CreateAsync(user, userCreateDto.Password);
         await Repository.UpdateAsync(user, true);
 
-        await SendMail(user);
+        await mediator.Publish(new UserCreatedEvent(user));
 
         return _mapper.Map<User, UserDetailDto>(user);
-    }
-
-    private async Task SendMail(User user)
-    {
-        var replaceEmailDto = new UserReplaceEmailDto
-        {
-            Name = user.FullName
-        };
-        await emailService.SendMail(new SendMailDto
-        {
-            To = user.Email,
-            Name = user.UserName,
-            Subject = "Welcome",
-            TemplateName = "EmailTemplateCreateUser",
-            ReplaceDto = replaceEmailDto
-        });
     }
 
     public override async Task<PaginatedList<UserListDto>> GetListAsync(PaginatedListQuery query,

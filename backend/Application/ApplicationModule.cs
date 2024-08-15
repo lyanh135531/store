@@ -14,6 +14,7 @@ public static class ApplicationModule
     {
         service.AddAutoMapper(Assembly.GetExecutingAssembly());
         service.AddSingleton<MjmlRenderer>();
+        service.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
         #region Core
 

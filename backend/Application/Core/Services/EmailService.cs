@@ -1,9 +1,12 @@
 ﻿using Application.Configs;
 using Application.Core.DTOs;
 using Application.Core.Extensions;
+using Domain.Emails.Entities;
+using Domain.Emails.Repositories;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
@@ -14,7 +17,9 @@ namespace Application.Core.Services;
 public class EmailService(
     IHostEnvironment hostEnvironment,
     MjmlRenderer mjmlRenderer,
-    IOptions<SmtpSettings> options)
+    IOptions<SmtpSettings> options,
+    IEmailMessageRepository emailMessageRepository,
+    ILogger<EmailService> logger)
     : IEmailService
 {
     private readonly SmtpSettings _smtpSettings = options.Value;
@@ -38,16 +43,35 @@ public class EmailService(
                 Text = mjmlRenderResult.Html
             };
 
+            var emailMessage = await emailMessageRepository.AddAsync(new EmailMessage()
+            {
+                Subject = sendMailDto.Subject,
+                Status = EmailStatus.Sending,
+                FromEmail = _smtpSettings.SenderEmail,
+                MjmlContent = template,
+                HtmlContent = mjmlRenderResult.Html,
+                ToEmail = sendMailDto.To,
+            }, true);
+            
             using var client = new SmtpClient();
             try
             {
+                
                 await client.ConnectAsync(_smtpSettings.Host, _smtpSettings.Port,
                     SecureSocketOptions.StartTls);
                 await client.AuthenticateAsync(_smtpSettings.ApiKey, _smtpSettings.ApiSecretKey);
                 await client.SendAsync(message);
             }
+            catch (Exception ex)
+            {
+                emailMessage.Status = EmailStatus.Error;
+                await emailMessageRepository.UpdateAsync(emailMessage, true);
+                logger.LogError(ex.Message);
+            }
             finally
             {
+                emailMessage.Status = EmailStatus.Success;
+                await emailMessageRepository.UpdateAsync(emailMessage, true);
                 await client.DisconnectAsync(true);
             }
         }

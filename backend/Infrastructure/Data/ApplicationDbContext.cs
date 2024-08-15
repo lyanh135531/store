@@ -1,11 +1,15 @@
 using Domain.Core;
 using Infrastructure.Core;
 using Infrastructure.EntityConfigurations;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data;
 
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ICurrentUser currentUser)
+public class ApplicationDbContext(
+    DbContextOptions<ApplicationDbContext> options,
+    ICurrentUser currentUser,
+    IMediator mediator)
     : DbContext(options)
 {
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -21,12 +25,14 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public override int SaveChanges()
     {
         UpdateAuditableEntity();
+        DispatchDomainEvents().GetAwaiter().GetResult();
         return base.SaveChanges();
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         UpdateAuditableEntity();
+        DispatchDomainEvents().GetAwaiter().GetResult();
         return base.SaveChangesAsync(cancellationToken);
     }
 
@@ -51,5 +57,23 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 auditableEntity.LastModifiedBy = currentUser.Id;
             }
         }
+    }
+
+    private async Task DispatchDomainEvents()
+    {
+        var entities = ChangeTracker
+            .Entries<Entity<Guid>>()
+            .Where(e => e.Entity.DomainEvents.Count != 0)
+            .Select(e => e.Entity)
+            .ToList();
+
+        var domainEvents = entities
+            .SelectMany(e => e.DomainEvents)
+            .ToList();
+
+        entities.ToList().ForEach(e => e.ClearDomainEvents());
+
+        foreach (var domainEvent in domainEvents)
+            await mediator.Publish(domainEvent);
     }
 }

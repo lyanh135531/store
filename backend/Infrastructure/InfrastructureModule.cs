@@ -1,8 +1,10 @@
 using Domain.Business.Repositories;
+using Domain.Emails.Repositories;
 using Domain.Files.Repositories;
 using Domain.Ums.Repositories;
 using Infrastructure.Core;
 using Infrastructure.Repositories.Business;
+using Infrastructure.Repositories.Emails;
 using Infrastructure.Repositories.Files;
 using Infrastructure.Repositories.Ums;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,6 +37,12 @@ public static class InfrastructureModule
 
         service.AddTransient<IFileEntryRepository, FileEntryRepository>();
         service.AddTransient<IFileEntryCollectionRepository, FileEntryCollectionRepository>();
+
+        #endregion
+
+        #region Email
+
+        service.AddTransient<IEmailMessageRepository, EmailMessageRepository>();
 
         #endregion
     }
