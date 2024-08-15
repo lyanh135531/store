@@ -4,8 +4,8 @@ namespace Domain.Business.Entities;
 
 public class Category : Entity<Guid>
 {
-    public string Name { get; set; }
-    public string Description { get; set; }
+    public required string Name { get; set; }
+    public string? Description { get; set; }
 
     public Guid? ParentId { get; set; }
     public Category Parent { get; set; }

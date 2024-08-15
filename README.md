@@ -9,5 +9,8 @@ DbUp
 FluentValidation
 Github Actions
 Middleware
-Redis
+StackExchange.Redis
 Serilog
+Domain Event
+MediatR
+MailKit

@@ -10,9 +10,9 @@ public class PaginatedListQuery
 
 public class Filter
 {
-    public string PropertyName { get; set; }
+    public string? PropertyName { get; set; }
     public Operator Operator { get; set; }
-    public string Value { get; set; }
+    public string? Value { get; set; }
 }
 
 public enum Operator

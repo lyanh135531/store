@@ -2,5 +2,5 @@
 
 public class FileConfig
 {
-    public List<string> AllowExtensions { get; set; }
+    public List<string> AllowExtensions { get; set; } 
 }

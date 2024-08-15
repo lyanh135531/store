@@ -2,9 +2,9 @@
 
 public class SendMailDto
 {
-    public string To { get; set; }
-    public string Name { get; set; }
-    public string Subject { get; set; }
-    public string TemplateName { get; set; }
-    public object ReplaceDto { get; set; }
+    public required string To { get; set; }
+    public required string Name { get; set; }
+    public string? Subject { get; set; }
+    public required string TemplateName { get; set; }
+    public object? ReplaceDto { get; set; }
 }
