@@ -30,6 +30,8 @@ public static class InfrastructureModule
         service.AddTransient<IOrderRepository, OrderRepository>();
         service.AddTransient<IOrderDetailRepository, OrderDetailRepository>();
         service.AddTransient<ICategoryRepository, CategoryRepository>();
+        service.AddTransient<ICartRepository, CartRepository>();
+        service.AddTransient<ICartDetailRepository, CartDetailRepository>();
 
         #endregion
 
