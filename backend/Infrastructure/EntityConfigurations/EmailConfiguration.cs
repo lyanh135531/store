@@ -1,4 +1,4 @@
-using Domain.Emails;
+using Domain.Emails.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.EntityConfigurations;
@@ -16,8 +16,8 @@ public static class EmailConfiguration
             entity.Property(x => x.Id).HasDefaultValueSql("NEWID()");
             entity.Property(x => x.FromEmail).IsRequired().HasMaxLength(100);
             entity.Property(x => x.ToEmail).IsRequired().HasMaxLength(100);
-            entity.Property(x => x.CcEmail).IsRequired().HasMaxLength(100);
-            entity.Property(x => x.BccEmail).IsRequired().HasMaxLength(100);
+            entity.Property(x => x.CcEmail).HasMaxLength(100);
+            entity.Property(x => x.BccEmail).HasMaxLength(100);
             entity.Property(x => x.MjmlContent).IsRequired();
             entity.Property(x => x.Subject).IsRequired().HasMaxLength(100);
             entity.Property(x => x.HtmlContent).IsRequired();
