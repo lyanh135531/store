@@ -18,7 +18,7 @@ public static class UmsConfiguration
             entity.HasIndex(x => x.Email).IsUnique();
             entity.Property(x => x.Id).HasDefaultValueSql("NEWID()");
             entity.Property(x => x.Status).IsRequired();
-            entity.Property(x => x.UserName).IsRequired().HasMaxLength(100);
+            entity.Property(x => x.UserName).IsRequired().HasMaxLength(20);
             entity.Property(x => x.Email).IsRequired().HasMaxLength(100);
             entity.Property(x => x.FullName).HasMaxLength(100);
             entity.Property(x => x.DateOfBirth).HasDefaultValueSql("GETDATE()");
