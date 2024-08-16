@@ -1,14 +1,16 @@
+import { AuthUser } from '@/types/auth';
 import { create } from 'zustand';
-import { AuthUser } from '~/types/auth';
 
 interface AuthState {
+  isAuthenticated: boolean;
   user: AuthUser | null;
   setUser: (user: AuthUser | null) => void;
 }
 
 const useAuthStore = create<AuthState>((set) => ({
+  isAuthenticated: false,
   user: null,
-  setUser: (user) => set({ user })
+  setUser: (user) => set({ user, isAuthenticated: !!user })
 }));
 
 export default useAuthStore;
