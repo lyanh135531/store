@@ -30,6 +30,16 @@ services.Configure<FileConfig>(configuration.GetSection("FileConfig"));
 services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));
 builder.Services.AddStackExchangeRedisCache(options => { options.Configuration = configuration["RedisCacheUrl"]; });
 
+services.AddCors(options =>
+{
+    options.AddPolicy("wwwroot",
+        policyBuilder =>
+        {
+            policyBuilder.WithOrigins("http://localhost:3000")
+                .AllowAnyMethod().AllowAnyHeader();
+        });
+});
+
 #region Serilog
 
 Log.Logger = new LoggerConfiguration()
@@ -143,6 +153,7 @@ app.UseStaticFiles(new StaticFileOptions
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseRouting();
+app.UseCors("wwwroot");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
