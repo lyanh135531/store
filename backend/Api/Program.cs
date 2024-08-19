@@ -1,5 +1,3 @@
-using System.Net;
-using System.Net.Mail;
 using System.Reflection;
 using Api.Middlewares;
 using Application;
@@ -10,6 +8,7 @@ using FluentValidation.AspNetCore;
 using Infrastructure;
 using Infrastructure.Common;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -36,7 +35,9 @@ services.AddCors(options =>
         policyBuilder =>
         {
             policyBuilder.WithOrigins("http://localhost:3000")
-                .AllowAnyMethod().AllowAnyHeader();
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials();
         });
 });
 
@@ -90,14 +91,15 @@ services.AddIdentity<User, Role>(options =>
 
 #region Cookie
 
-services.ConfigureApplicationCookie(options =>
-{
-    options.Cookie.Name = "STORE";
-    options.LoginPath = "/api/identity/login";
-    options.LogoutPath = "/api/identity/logout";
-    options.Cookie.HttpOnly = true;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-});
+services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.Cookie.Name = "STORE";
+        options.Cookie.SameSite = SameSiteMode.Lax;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.None;
+        options.LoginPath = "/api/identity/login";
+        options.LogoutPath = "/api/identity/logout";
+    });
 
 #endregion
 

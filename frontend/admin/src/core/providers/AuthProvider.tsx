@@ -1,21 +1,27 @@
 import useAuthStore from '@/stores/authStore';
+import { ApiResponse, AuthUser } from '@/types/auth';
+import { ApiUtil } from '@/utils/apiUtil';
 import React, { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { API_CHECK_LOGIN } from '../apis';
 
 interface AuthProviderProps {
   children: React.ReactNode;
 }
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const { isAuthenticated } = useAuthStore();
-  const location = useLocation();
-  const navigate = useNavigate();
+  const { setUser } = useAuthStore();
 
   useEffect(() => {
-    if (!isAuthenticated && location.pathname !== '/login') {
-      navigate('/login', { state: { from: location } });
-    }
-  }, [isAuthenticated, location.pathname, navigate]);
+    const checkAuth = async () => {
+      const response = await ApiUtil.Axios<ApiResponse<AuthUser>>('get', API_CHECK_LOGIN);
+      if (response.data?.success) {
+        setUser(response?.data?.result);
+      } else {
+        setUser(null);
+      }
+    };
+    checkAuth();
+  }, []);
 
   return <>{children}</>;
 };

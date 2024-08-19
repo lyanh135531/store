@@ -1,7 +1,11 @@
-﻿using Api.DTOs;
+﻿using System.Security.Claims;
+using Api.DTOs;
 using Application.Ums.DTOs;
 using AutoMapper;
 using Domain.Ums.Entities;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,8 +31,37 @@ public class IdentityController(UserManager<User> userManager, SignInManager<Use
             lockoutOnFailure: false);
         if (!result.Succeeded) return Unauthorized();
 
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new(ClaimTypes.Name, model.UserName)
+        };
+
+        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+            new ClaimsPrincipal(claimsIdentity));
+
         var userProfile = mapper.Map<UserProfileDto>(user);
         return Ok(userProfile);
+    }
+
+    [HttpGet("check-login")]
+    public async Task<IActionResult> CheckLogin()
+    {
+        if (User.Identity is not { IsAuthenticated: true }) return Unauthorized();
+        var userName = User.Identity.Name;
+
+        if (string.IsNullOrEmpty(userName)) return Unauthorized();
+
+        var user = await userManager.FindByNameAsync(userName);
+        var userProfile = mapper.Map<UserProfileDto>(user);
+
+        return Ok(new
+        {
+            Success = true,
+            User = userProfile
+        });
     }
 
     [HttpPost("logout")]

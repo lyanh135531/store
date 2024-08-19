@@ -6,3 +6,8 @@ export interface AuthUser extends Entity {
   gender: Gender;
   fullName?: string;
 }
+
+export interface ApiResponse<T> {
+  success: boolean;
+  result: T;
+}

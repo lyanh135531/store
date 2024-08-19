@@ -1,3 +1,5 @@
+import AuthProvider from '@/core/providers/AuthProvider';
+import queryClient from '@/utils/queryClient';
 import { QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
@@ -5,12 +7,10 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import queryClient from '@/utils/queryClient';
-import AuthProvider from '@/core/providers/AuthProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
-  <React.StrictMode>
+  <React.Fragment>
     <BrowserRouter>
       <AuthProvider>
         <QueryClientProvider client={queryClient}>
@@ -18,7 +18,7 @@ root.render(
         </QueryClientProvider>
       </AuthProvider>
     </BrowserRouter>
-  </React.StrictMode>
+  </React.Fragment>
 );
 
 // If you want to start measuring performance in your app, pass a function

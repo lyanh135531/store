@@ -55,16 +55,20 @@ public class UserService(
         };
         await userManager.CreateAsync(userAdmin, PasswordAdmin);
         await userManager.AddToRoleAsync(userAdmin, Role.Admin);
-        await Repository.UpdateAsync(userAdmin, true);
 
         return _mapper.Map<User, UserDetailDto>(userAdmin);
     }
 
     public override async Task<UserDetailDto> CreateAsync(UserCreateDto userCreateDto)
     {
-        var user = _mapper.Map<UserCreateDto, User>(userCreateDto);
-        await userManager.CreateAsync(user, userCreateDto.Password);
-        await Repository.UpdateAsync(user, true);
+        var user = _mapper.Map<User>(userCreateDto);
+        var result = await userManager.CreateAsync(user, userCreateDto.Password);
+
+        if (!result.Succeeded)
+        {
+            var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+            throw new Exception($"User creation failed: {errors}");
+        }
 
         await mediator.Publish(new UserCreatedEvent(user));
 

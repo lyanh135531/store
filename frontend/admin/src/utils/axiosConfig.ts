@@ -1,21 +1,20 @@
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-
-const navigate = useNavigate();
 
 const axiosInstance = axios.create({
-  baseURL: process.env.BASE_URL,
+  baseURL: import.meta.env.VITE_BASE_URL,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json'
   }
 });
 
+axiosInstance.defaults.withCredentials = true;
+
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-      navigate('/login');
+      window.location.href = '/login';
     }
     return Promise.reject(error);
   }

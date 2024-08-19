@@ -12,7 +12,8 @@ export class ApiUtil {
     const config: AxiosRequestConfig = {
       params,
       data,
-      headers
+      headers,
+      withCredentials: true
     };
     switch (method.toUpperCase()) {
       case 'GET':

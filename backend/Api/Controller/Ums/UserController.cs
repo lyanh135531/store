@@ -13,6 +13,7 @@ namespace Api.Controller.Ums;
 public class UserController(IUserService userService)
     : ApiControllerBase<Guid, UserListDto, UserDetailDto, UserCreateDto, UserUpdateDto>(userService)
 {
+    [AllowAnonymous]
     [HttpPost("register")]
     public async Task<ApiResponse<UserDetailDto>> RegisterAdmin()
     {
