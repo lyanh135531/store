@@ -14,7 +14,9 @@ module.exports = {
       }
     },
     extend: {
-      color: {
+      backgroundColor: {
+        'main-hover': '#0000000f',
+
         'main-color-1': '#131629',
         'main-color-2': '#161d40',
         'main-color-3': '#1c2755',

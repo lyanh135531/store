@@ -1,16 +1,17 @@
 import { menus } from '@/menus';
-import { Layout, Menu, Switch } from 'antd';
-import { Content, Header } from 'antd/es/layout/layout';
+import { Layout, Menu } from 'antd';
+import { Content } from 'antd/es/layout/layout';
 import Sider from 'antd/es/layout/Sider';
 import React, { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Icons } from '../icons/icon';
 import { useTheme } from '../providers/ThemeProvider';
+import ThemeHeader from './ThemeHeader';
 import UserHeader from './UserHeader';
 
 const BaseLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState<boolean>(false);
-  const { setTheme, theme } = useTheme();
+  const { theme } = useTheme();
   const navigate = useNavigate();
 
   const renderIconCollapse = () => {
@@ -33,20 +34,15 @@ const BaseLayout: React.FC = () => {
       </Sider>
 
       <div className="flex flex-col flex-1">
-        <Header className="p-4 flex justify-between items-center bg-white">
+        <div className="p-4 flex justify-between items-center bg-white">
           <div className="text-xl cursor-pointer" onClick={() => setCollapsed(!collapsed)}>
             {renderIconCollapse()}
           </div>
           <div className="flex items-center gap-4">
-            <Switch
-              checkedChildren={<Icons.Sun />}
-              unCheckedChildren={<Icons.Moon />}
-              checked={theme === 'dark'}
-              onChange={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            />
+            <ThemeHeader />
             <UserHeader />
           </div>
-        </Header>
+        </div>
 
         <Content className="relative flex-1">
           <div className="absolute top-0 left-0 w-full h-full p-4 bg-gray-50 shadow-main-inner">
