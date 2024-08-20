@@ -24,44 +24,46 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="container h-full">
-      <BaseForm<LoginFormModel>
-        form={form}
-        initialValues={
-          {
-            rememberMe: true
-          } as LoginFormModel
-        }
-        onFinish={onFinish}
-        className="max-w-96 m-auto content-center">
-        <InputField<LoginFormModel>
-          name="userName"
-          placeholder="Username"
-          rules={[{ required: true, message: 'Please input your Username!' }]}
-          icon={<Icons.User />}
-        />
-        <InputField<LoginFormModel>
-          name="password"
-          placeholder="Password"
-          rules={[{ required: true, message: 'Please input your Password!' }]}
-          type="password"
-          icon={<Icons.Lock />}
-        />
-        <div className="flex justify-between mb-6">
-          <CheckboxField<LoginFormModel> name={'rememberMe'} noStyle>
-            Remember me
-          </CheckboxField>
-          <Link to={'/forgot-password'}>Forgot Password</Link>
-        </div>
-        <BaseFormButton
-          disabled={isPending}
-          configs={{
-            confirm: true,
-            confirmText: 'Login',
-            classNameConfirm: 'w-full'
-          }}
-        />
-      </BaseForm>
+    <div className="container h-full content-center">
+      <div className="max-w-lg m-auto">
+        <BaseForm<LoginFormModel>
+          form={form}
+          initialValues={
+            {
+              rememberMe: true
+            } as LoginFormModel
+          }
+          onFinish={onFinish}
+          className="m-auto content-center p-16 shadow">
+          <InputField<LoginFormModel>
+            name="userName"
+            placeholder="Username"
+            rules={[{ required: true, message: 'Please input your Username!' }]}
+            icon={<Icons.User />}
+          />
+          <InputField<LoginFormModel>
+            name="password"
+            placeholder="Password"
+            rules={[{ required: true, message: 'Please input your Password!' }]}
+            type="password"
+            icon={<Icons.Lock />}
+          />
+          <div className="flex justify-between mb-6">
+            <CheckboxField<LoginFormModel> name={'rememberMe'} noStyle>
+              Remember me
+            </CheckboxField>
+            <Link to={'/forgot-password'}>Forgot Password</Link>
+          </div>
+          <BaseFormButton
+            disabled={isPending}
+            configs={{
+              confirm: true,
+              confirmText: 'Login',
+              classNameConfirm: 'w-full'
+            }}
+          />
+        </BaseForm>
+      </div>
     </div>
   );
 };
