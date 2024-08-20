@@ -1,8 +1,9 @@
 import { Icons } from '@/core/icons/icon';
 import { useLogin } from '@/hooks/authQuery';
+import useAuthStore from '@/stores/authStore';
 import { useForm } from 'antd/es/form/Form';
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import BaseForm from '../forms/BaseForm';
 import BaseFormButton from '../forms/BaseFormButton';
 import CheckboxField from '../forms/CheckBoxField';
@@ -15,8 +16,18 @@ export interface LoginFormModel {
 }
 
 const LoginPage: React.FC = () => {
+  const { setUser } = useAuthStore();
+  const navigate = useNavigate();
   const { mutate: login, isPending } = useLogin();
   const [form] = useForm<LoginFormModel>();
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+      navigate('/');
+    }
+  }, []);
 
   const onFinish = async (values: LoginFormModel) => {
     await form.validateFields();

@@ -1,15 +1,28 @@
 import React, { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import AuthProvider from './core/providers/AuthProvider';
 
 const LoginPage = lazy(() => import('@/core/components/authentications/LoginPage'));
 const HomePage = lazy(() => import('./pages/home/HomePage'));
+const BaseLayout = lazy(() => import('@/core/layouts/BaseLayout'));
 
 const AppRoutes: React.FC = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <Routes>
-        <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/"
+          element={
+            <AuthProvider>
+              <BaseLayout />
+            </AuthProvider>
+          }>
+          <Route index path="/home" element={<HomePage />} />
+          <Route path="/product" element={<HomePage />} />
+          <Route path="/category" element={<HomePage />} />
+          <Route path="/setting" element={<HomePage />} />
+        </Route>
       </Routes>
     </Suspense>
   );

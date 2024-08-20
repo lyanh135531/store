@@ -15,7 +15,9 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const checkAuth = async () => {
       const response = await ApiUtil.Axios<ApiResponse<AuthUser>>('get', API_CHECK_LOGIN);
       if (response.data?.success) {
-        setUser(response?.data?.result);
+        const userInfo = response?.data?.result;
+        setUser(userInfo);
+        localStorage.setItem('user', JSON.stringify(userInfo));
       } else {
         setUser(null);
       }

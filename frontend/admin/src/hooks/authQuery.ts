@@ -23,10 +23,15 @@ export const useLogin = () => {
 };
 
 export const useLogout = () => {
+  const navigate = useNavigate();
+  const { setUser } = useAuthStore();
+
   return useMutation({
     mutationFn: async () => await ApiUtil.Axios('post', API_LOGOUT),
     onSuccess: () => {
-      useAuthStore.getState().setUser(null);
+      setUser(null);
+      localStorage.removeItem('user');
+      navigate('/login');
     }
   });
 };
