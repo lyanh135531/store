@@ -1,5 +1,6 @@
 # store
 
+#backend
 Clean Architecture
 Repository pattern
 EFCore
@@ -14,3 +15,11 @@ Serilog
 Domain Event
 MediatR
 MailKit
+
+#frontend
+Typescript
+Vite
+Zustand
+Antd
+Tailwind
+Axios

@@ -1,6 +1,7 @@
 import React, { lazy, Suspense } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import AuthProvider from './core/providers/AuthProvider';
+import { Result } from 'antd';
 
 const LoginPage = lazy(() => import('@/core/components/authentications/LoginPage'));
 const HomePage = lazy(() => import('./pages/home/HomePage'));
@@ -18,10 +19,12 @@ const AppRoutes: React.FC = () => {
               <BaseLayout />
             </AuthProvider>
           }>
-          <Route index path="/home" element={<HomePage />} />
+          <Route index element={<Navigate to="/home" replace />} />
+          <Route path="home" element={<HomePage />} />
           <Route path="/product" element={<HomePage />} />
           <Route path="/category" element={<HomePage />} />
           <Route path="/setting" element={<HomePage />} />
+          <Route path="*" element={<Result />} />
         </Route>
       </Routes>
     </Suspense>
