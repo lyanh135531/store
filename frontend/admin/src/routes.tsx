@@ -1,11 +1,12 @@
 import React, { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import AuthProvider from './core/providers/AuthProvider';
-import { Result } from 'antd';
 import Loading from './core/components/common/Loading';
+import NotFound from './core/components/common/NotFound';
+import AuthProvider from './core/providers/AuthProvider';
 
 const LoginPage = lazy(() => import('@/core/components/authentications/LoginPage'));
-const HomePage = lazy(() => import('./pages/home/HomePage'));
+const HomePage = lazy(() => import('@/pages/home/HomePage'));
+const UserPage = lazy(() => import('@/pages/user/UserPage'));
 const BaseLayout = lazy(() => import('@/core/layouts/BaseLayout'));
 
 const AppRoutes: React.FC = () => {
@@ -24,9 +25,10 @@ const AppRoutes: React.FC = () => {
           <Route path="home" element={<HomePage />} />
           <Route path="/product" element={<HomePage />} />
           <Route path="/category" element={<HomePage />} />
+          <Route path="/user" element={<UserPage />} />
           <Route path="/setting" element={<HomePage />} />
-          <Route path="*" element={<Result />} />
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
   );
