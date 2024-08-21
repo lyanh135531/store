@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import AuthProvider from './core/providers/AuthProvider';
 import { Result } from 'antd';
+import Loading from './core/components/common/Loading';
 
 const LoginPage = lazy(() => import('@/core/components/authentications/LoginPage'));
 const HomePage = lazy(() => import('./pages/home/HomePage'));
@@ -9,7 +10,7 @@ const BaseLayout = lazy(() => import('@/core/layouts/BaseLayout'));
 
 const AppRoutes: React.FC = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Loading fullScreen />}>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route

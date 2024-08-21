@@ -1,3 +1,4 @@
+import logoImg from '@/assets/images/logo.jpg';
 import useBreadcrumbMenu from '@/hooks/useBreadcrumb';
 import { menus } from '@/menus';
 import { Layout, Menu } from 'antd';
@@ -26,9 +27,9 @@ const BaseLayout: React.FC = () => {
     <Layout className="flex h-full" hasSider>
       <Sider width={250} trigger={null} collapsible collapsed={collapsed} theme="light">
         <div
-          className="h-16 content-center text-center cursor-pointer"
+          className="h-16 content-center text-center cursor-pointer p-2"
           onClick={() => navigate('/')}>
-          LOGO
+          <img className="w-full h-full object-cover" src={logoImg} alt="logo" />
         </div>
         <Menu
           className="h-full !border-none px-4 flex flex-col gap-2"
