@@ -1,70 +1,71 @@
 {
-  "name": "admin",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@ant-design/icons": "^5.4.0",
-    "@tanstack/react-query": "^5.51.23",
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^13.0.0",
-    "@testing-library/user-event": "^13.2.1",
-    "@types/jest": "^27.0.1",
-    "@types/node": "^16.7.13",
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
-    "@vitejs/plugin-react": "^4.3.1",
-    "antd": "^5.20.1",
-    "axios": "^1.7.4",
-    "clsx": "^2.1.1",
-    "lodash": "^4.17.21",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.26.1",
-    "react-scripts": "5.0.1",
-    "typescript": "^5.5.4",
-    "vite": "^5.4.1",
-    "web-vitals": "^2.1.0",
-    "zustand": "^4.5.5"
-  },
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "serve": "vite preview",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "format": "prettier --write ./**/*.{js,jsx,ts,tsx,css,md,json} --config ./.prettierrc.json"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.9.0",
-    "@types/lodash": "^4.17.7",
-    "autoprefixer": "^10.4.20",
-    "eslint": "^9.9.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.2.1",
-    "eslint-plugin-react": "^7.35.0",
-    "globals": "^15.9.0",
-    "postcss": "^8.4.41",
-    "prettier": "^3.3.3",
-    "tailwindcss": "^3.4.10",
-    "typescript-eslint": "^8.1.0"
-  }
+    "name": "admin",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "@ant-design/icons": "^5.4.0",
+        "@tanstack/react-query": "^5.51.23",
+        "@testing-library/jest-dom": "^5.14.1",
+        "@testing-library/react": "^13.0.0",
+        "@testing-library/user-event": "^13.2.1",
+        "@types/jest": "^27.0.1",
+        "@types/node": "^16.7.13",
+        "@types/react": "^18.0.0",
+        "@types/react-dom": "^18.0.0",
+        "@vitejs/plugin-react": "^4.3.1",
+        "antd": "^5.20.1",
+        "axios": "^1.7.4",
+        "clsx": "^2.1.1",
+        "lodash": "^4.17.21",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "react-router-dom": "^6.26.1",
+        "react-scripts": "5.0.1",
+        "typescript": "^5.5.4",
+        "vite": "^5.4.1",
+        "web-vitals": "^2.1.0",
+        "zustand": "^4.5.5"
+    },
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "serve": "vite preview",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "format": "prettier --write ./**/*.{js,jsx,ts,tsx,css,md,json} --config ./.prettierrc.json"
+    },
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ]
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.9.0",
+        "@types/lodash": "^4.17.7",
+        "autoprefixer": "^10.4.20",
+        "eslint": "^9.9.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-prettier": "^5.2.1",
+        "eslint-plugin-react": "^7.35.0",
+        "globals": "^15.9.0",
+        "postcss": "^8.4.41",
+        "prettier": "^3.3.3",
+        "sass-embedded": "^1.77.8",
+        "tailwindcss": "^3.4.10",
+        "typescript-eslint": "^8.1.0"
+    }
 }

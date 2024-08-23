@@ -1,0 +1,21 @@
+.base-table {
+    .ant-table-thead > tr > th {
+        background: white;
+    }
+
+    .ant-spin-nested-loading,
+    .ant-spin-container {
+        width: 100%;
+        height: 100%;
+    }
+
+    .ant-spin-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .ant-table-pagination {
+            padding: 0 16px;
+        }
+    }
+}

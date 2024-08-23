@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
-import './index.css';
-import reportWebVitals from './reportWebVitals';
+import App from '@/App';
+import '@/index.scss';
+import reportWebVitals from '@/reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
-  <React.Fragment>
-    <App />
-  </React.Fragment>
+    <React.Fragment>
+        <App />
+    </React.Fragment>
 );
 
 // If you want to start measuring performance in your app, pass a function
