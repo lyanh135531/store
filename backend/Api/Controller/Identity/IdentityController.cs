@@ -21,7 +21,8 @@ public class IdentityController(UserManager<User> userManager, SignInManager<Use
         if (!ModelState.IsValid) return Unauthorized();
 
         var user = await userManager.FindByNameAsync(model.UserName);
-        if (user == null || !await userManager.CheckPasswordAsync(user, model.Password))
+        if (user == null || !await userManager.CheckPasswordAsync(user, model.Password) ||
+            !await userManager.IsInRoleAsync(user, Role.Admin))
         {
             return Unauthorized();
         }

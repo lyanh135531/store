@@ -60,16 +60,16 @@ const BaseLayout: React.FC = () => {
                     </div>
                 </div>
 
-                <Content className="relative flex-1">
-                    <div className="absolute top-0 left-0 flex flex-col gap-4 w-full h-full pt-4 px-20 pb-0 bg-gray-50 shadow-main-inner">
+                <Content className="relative flex-1 container">
+                    <div className="absolute top-0 left-0 flex flex-col gap-4 w-full h-full pt-4 pb-0 shadow-main-inner">
                         <BaseBreadcrumb menuItems={breadcrumbItems} />
-                        <div className="bg-white flex-1 w-full h-full rounded-xl shadow-main overflow-hidden">
+                        <div className="bg-white flex-1 w-full h-full rounded-lg shadow-main overflow-hidden">
                             <Outlet />
                         </div>
                     </div>
                 </Content>
-                <Footer className="self-center px-0 py-2 bg-slate-50 w-full text-center">
-                    Store ©2024 Created by Lian
+                <Footer className="self-center px-0 py-2 w-full text-center">
+                    Store ©2024 Created by Lian ❤️
                 </Footer>
             </div>
         </Layout>

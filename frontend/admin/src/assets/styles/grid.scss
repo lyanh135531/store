@@ -18,4 +18,26 @@
             padding: 0 16px;
         }
     }
+
+    .ant-table-body {
+        scrollbar-width: auto;
+        scrollbar-color: auto;
+
+        .ant-table-cell-row-hover {
+            background: transparent !important;
+        }
+    }
+
+    .ant-table-empty {
+        height: 100%;
+        .ant-table-container {
+            height: 100%;
+            .ant-table-content {
+                height: 100%;
+                table {
+                    height: 100%;
+                }
+            }
+        }
+    }
 }

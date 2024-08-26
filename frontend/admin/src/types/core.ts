@@ -6,5 +6,5 @@ export interface Entity {
 
 export enum Gender {
     Male = 'Male',
-    Fermale = 'Female'
+    Female = 'Female'
 }

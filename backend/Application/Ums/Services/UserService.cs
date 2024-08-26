@@ -92,6 +92,7 @@ public class UserService(
         var total = await queryable.CountAsync(cancellationToken);
 
         var result = await queryable
+            .OrderByDescending(x => x.CreatedAt)
             .ProjectTo<UserListDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
 

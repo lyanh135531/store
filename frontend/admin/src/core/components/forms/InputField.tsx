@@ -4,6 +4,8 @@ import { Rule } from 'antd/es/form';
 import { InputProps } from 'antd/es/input';
 
 interface InputFieldProps<T> {
+    id?: string;
+    autoComplete?: string;
     name: keyof T;
     label?: string;
     rules?: Rule[];
@@ -18,16 +20,29 @@ const InputField = <T,>({
     rules,
     placeholder,
     type = 'text',
-    icon
+    icon,
+    ...props
 }: InputFieldProps<T>) => {
     const renderField = () => {
         switch (type) {
             case 'password':
                 return (
-                    <Input.Password type={type} placeholder={placeholder ?? label} prefix={icon} />
+                    <Input.Password
+                        type={type}
+                        placeholder={placeholder ?? label}
+                        prefix={icon}
+                        {...props}
+                    />
                 );
             default:
-                return <Input type={type} placeholder={placeholder ?? label} prefix={icon} />;
+                return (
+                    <Input
+                        type={type}
+                        placeholder={placeholder ?? label}
+                        prefix={icon}
+                        {...props}
+                    />
+                );
         }
     };
 

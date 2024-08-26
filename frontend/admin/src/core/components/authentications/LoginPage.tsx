@@ -3,11 +3,9 @@ import BaseForm from '@/core/components/forms/BaseForm';
 import BaseFormButton from '@/core/components/forms/BaseFormButton';
 import CheckboxField from '@/core/components/forms/CheckBoxField';
 import InputField from '@/core/components/forms/InputField';
-import { NOTIFY_TITLE } from '@/core/constants/notify';
 import { Icons } from '@/core/icons/icon';
 import { useLogin } from '@/hooks/authQuery';
 import useAuthStore from '@/stores/authStore';
-import NotifyUtil from '@/utils/notifyUtil';
 import { useForm } from 'antd/es/form/Form';
 import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -21,7 +19,7 @@ export interface LoginFormModel {
 const LoginPage: React.FC = () => {
     const { setUser } = useAuthStore();
     const navigate = useNavigate();
-    const { mutate: login, isPending, error, isError } = useLogin();
+    const { mutate: login, isPending } = useLogin();
     const [form] = useForm<LoginFormModel>();
 
     useEffect(() => {
@@ -36,10 +34,6 @@ const LoginPage: React.FC = () => {
         await form.validateFields();
         login(values);
     };
-
-    if (isError) {
-        NotifyUtil.error(NOTIFY_TITLE, error?.message);
-    }
 
     if (isPending) return <Loading />;
 
@@ -60,6 +54,7 @@ const LoginPage: React.FC = () => {
                         placeholder="Username"
                         rules={[{ required: true, message: 'Please input your Username!' }]}
                         icon={<Icons.User />}
+                        autoComplete="username"
                     />
                     <InputField<LoginFormModel>
                         name="password"
@@ -67,6 +62,7 @@ const LoginPage: React.FC = () => {
                         rules={[{ required: true, message: 'Please input your Password!' }]}
                         type="password"
                         icon={<Icons.Lock />}
+                        autoComplete="current-password"
                     />
                     <div className="flex justify-between mb-6">
                         <CheckboxField<LoginFormModel> name={'rememberMe'} noStyle>

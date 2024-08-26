@@ -11,3 +11,10 @@ export interface ApiResponse<T> {
     success: boolean;
     result: T;
 }
+
+export interface PaginatedList<T> {
+    items: T[];
+    total: number;
+    offset: number;
+    limit: number;
+}
