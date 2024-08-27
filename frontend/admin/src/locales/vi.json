@@ -1,5 +1,34 @@
 {
     "menu": {
-        "homePage": "Trang chủ"
+        "home": "Trang chủ",
+        "product": "Sản phẩm",
+        "category": "Danh mục",
+        "user": "Người dùng",
+        "setting": "Cài đặt"
+    },
+    "theme": {
+        "light": "Sáng",
+        "dark": "Tối"
+    },
+    "locale": {
+        "en": "Tiếng Anh",
+        "vi": "Tiếng Việt"
+    },
+    "header": {
+        "information": "Thông tin",
+        "changePassword": "Đổi mật khẩu",
+        "logout": "Đăng xuất"
+    },
+    "table": {
+        "no": "STT",
+        "display": "Hiển thị từ {{start}} đến {{end}} trong tổng số {{total}} mục",
+        "search": "Tìm kiếm"
+    },
+    "user": {
+        "userName": "Tên đăng nhập",
+        "fullName": "Họ và tên",
+        "email": "Email",
+        "phone": "Số điện thoại",
+        "gender": "Giới tính"
     }
 }

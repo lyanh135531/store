@@ -8,18 +8,18 @@ interface LocaleState {
 }
 
 export enum LocaleKey {
-    enUS = 'enUS',
-    viVN = 'viVN'
+    en = 'en',
+    vi = 'vi'
 }
 
 const useLocaleStore = create<LocaleState>((set) => ({
     locale: enUS,
     setLocale: (localeKey: LocaleKey) => {
         switch (localeKey) {
-            case 'enUS':
+            case LocaleKey.en:
                 set({ locale: enUS });
                 break;
-            case 'viVN':
+            case LocaleKey.vi:
                 set({ locale: viVN });
                 break;
         }

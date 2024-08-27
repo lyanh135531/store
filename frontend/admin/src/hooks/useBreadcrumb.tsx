@@ -1,5 +1,6 @@
 import { Icons } from '@/core/icons';
-import { menus } from '@/menus';
+import { useMenu } from '@/menus';
+import useLocaleStore from '@/stores/localeStore';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -17,7 +18,9 @@ interface Menu {
 
 const useBreadcrumbMenu = () => {
     const navigate = useNavigate();
+    const menus = useMenu();
     const location = useLocation();
+    const { locale } = useLocaleStore();
     const [breadcrumbItems, setBreadcrumbItems] = useState<BreadcrumbItem[]>([]);
 
     useEffect(() => {
@@ -34,7 +37,7 @@ const useBreadcrumbMenu = () => {
         };
 
         updateBreadcrumb();
-    }, [location.pathname]);
+    }, [location.pathname, locale]);
 
     const handleMenuClick = (key: string) => {
         const currentMenu = menus.find((menu) => menu?.key === key) as Menu;

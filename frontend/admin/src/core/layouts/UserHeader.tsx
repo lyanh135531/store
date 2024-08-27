@@ -3,6 +3,7 @@ import { useLogout } from '@/hooks/authQuery';
 import useAuthStore from '@/stores/authStore';
 import { UserOutlined } from '@ant-design/icons';
 import { Avatar, Dropdown, MenuProps, Space, Typography } from 'antd';
+import { t } from 'i18next';
 import React from 'react';
 
 const UserHeader: React.FC = () => {
@@ -16,12 +17,12 @@ const UserHeader: React.FC = () => {
     const items: MenuProps['items'] = [
         {
             key: 'userInfo',
-            label: 'Information',
+            label: t('header.information'),
             icon: <Icons.User />
         },
         {
             key: 'changePassword',
-            label: 'Change password',
+            label: t('header.changePassword'),
             icon: <Icons.Key />
         },
         {
@@ -29,7 +30,7 @@ const UserHeader: React.FC = () => {
         },
         {
             key: 'logout',
-            label: 'Logout',
+            label: t('header.logout'),
             icon: <Icons.Logout />,
             onClick: handleLogout
         }

@@ -2,29 +2,30 @@ import BaseGrid from '@/core/grid/BaseGrid';
 import { GRID_API } from '@/pages/user/apis';
 import { UserDto } from '@/pages/user/types/user';
 import { ColumnsType } from 'antd/es/table';
+import { t } from 'i18next';
 import React from 'react';
 
 const UserPage: React.FC = () => {
     const columns: ColumnsType<UserDto> = [
         {
-            title: 'User Name',
+            title: t('user.userName'),
             dataIndex: 'userName'
         },
         {
-            title: 'Full Name',
+            title: t('user.fullName'),
             dataIndex: 'fullName'
         },
         {
-            title: 'Email',
+            title: t('user.email'),
             dataIndex: 'email'
         },
         {
-            title: 'Gender',
+            title: t('user.gender'),
             dataIndex: 'gender',
             width: 100
         },
         {
-            title: 'Phone',
+            title: t('user.phone'),
             dataIndex: 'phoneNumber',
             width: 150
         }

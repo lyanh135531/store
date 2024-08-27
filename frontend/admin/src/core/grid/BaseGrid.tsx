@@ -3,11 +3,13 @@ import BaseInput from '@/core/components/common/BaseInput';
 import SkeletonLoader from '@/core/components/common/BaseSkeleton';
 import { Icons } from '@/core/icons';
 import useMergeState from '@/hooks/useMergeState';
+import useLocaleStore from '@/stores/localeStore';
 import { ApiResponse, PaginatedList } from '@/types/auth';
 import { Entity } from '@/types/core';
 import { ApiUtil } from '@/utils/apiUtil';
 import { useQuery } from '@tanstack/react-query';
 import { Divider, Table, TablePaginationConfig, TableProps } from 'antd';
+import { t } from 'i18next';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -53,6 +55,7 @@ const BaseGrid = <T extends Entity>({
         current: 1
     });
     const [searchKey, setSearchKey] = useState<string>('');
+    const { locale } = useLocaleStore();
 
     const fetchData = async () => {
         try {
@@ -140,13 +143,13 @@ const BaseGrid = <T extends Entity>({
         debouncedSearch(event?.target?.value);
     };
 
-    const Toolbar = React.useMemo(() => {
+    const Toolbar = useMemo(() => {
         if (!toolbarConfig) return null;
         return (
             <div className="base-table-toolbar p-6 flex justify-between">
                 {toolbarConfig.search && (
                     <BaseInput
-                        placeholder="Search"
+                        placeholder={t('table.search')}
                         className="py-1 px-3 w-60"
                         allowClear
                         onChange={handleSearch}
@@ -167,22 +170,16 @@ const BaseGrid = <T extends Entity>({
         if (!total) return null;
         return (
             <div className="absolute bottom-0 flex gap-1 p-4 text-slate-400 items-center">
-                <span>Displaying</span>
-                <span>{start}</span>
-                <span>to</span>
-                <span>{end}</span>
-                <span>of</span>
-                <span>{total}</span>
-                <span>entries</span>
+                {t('table.display', { start, end, total })}
             </div>
         );
-    }, [total, start, end]);
+    }, [total, start, end, locale]);
 
     const columnsWithIndex = useMemo(() => {
         if (indexColumn) {
             return [
                 {
-                    title: 'No',
+                    title: t('table.no'),
                     key: 'index',
                     render: (_, __, index: number) =>
                         (paginationState.current - 1) * paginationState.pageSize + index + 1,

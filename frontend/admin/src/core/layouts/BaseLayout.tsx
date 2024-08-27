@@ -6,7 +6,7 @@ import ThemeHeader from '@/core/layouts/ThemeHeader';
 import UserHeader from '@/core/layouts/UserHeader';
 import { useTheme } from '@/core/providers/ThemeProvider';
 import useBreadcrumbMenu from '@/hooks/useBreadcrumb';
-import { menus } from '@/menus';
+import { useMenu } from '@/menus';
 import { Layout, Menu } from 'antd';
 import { Content, Footer } from 'antd/es/layout/layout';
 import Sider from 'antd/es/layout/Sider';
@@ -16,6 +16,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 const BaseLayout: React.FC = () => {
     const [collapsed, setCollapsed] = useState<boolean>(false);
     const { theme } = useTheme();
+    const menus = useMenu();
     const navigate = useNavigate();
     const { breadcrumbItems, handleMenuClick } = useBreadcrumbMenu();
 

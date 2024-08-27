@@ -1,5 +1,34 @@
 {
     "menu": {
-        "homePage": "Home Page"
+        "home": "Home Page",
+        "product": "Product",
+        "category": "Category",
+        "user": "User",
+        "setting": "Setting"
+    },
+    "theme": {
+        "light": "Light",
+        "dark": "Dark"
+    },
+    "locale": {
+        "en": "English",
+        "vi": "Vietnamese"
+    },
+    "header": {
+        "information": "Information",
+        "changePassword": "Change password",
+        "logout": "Logout"
+    },
+    "table": {
+        "no": "No",
+        "display": "Displaying {{start}} to {{end}} of {{total}} entries",
+        "search": "Search"
+    },
+    "user": {
+        "userName": "User Name",
+        "fullName": "Full Name",
+        "email": "Email",
+        "phone": "Phone",
+        "gender": "Gender"
     }
 }
