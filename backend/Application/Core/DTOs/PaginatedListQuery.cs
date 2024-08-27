@@ -4,6 +4,7 @@ public class PaginatedListQuery
 {
     public int Offset { get; set; }
     public int Limit { get; set; } = 10;
+    public string? SearchKey { get; set; }
 
     public List<Filter> Filters { get; set; } = [];
 }

@@ -3,7 +3,7 @@ import BaseForm from '@/core/components/forms/BaseForm';
 import BaseFormButton from '@/core/components/forms/BaseFormButton';
 import CheckboxField from '@/core/components/forms/CheckBoxField';
 import InputField from '@/core/components/forms/InputField';
-import { Icons } from '@/core/icons/icon';
+import { Icons } from '@/core/icons';
 import { useLogin } from '@/hooks/authQuery';
 import useAuthStore from '@/stores/authStore';
 import { useForm } from 'antd/es/form/Form';
@@ -48,7 +48,8 @@ const LoginPage: React.FC = () => {
                         } as LoginFormModel
                     }
                     onFinish={onFinish}
-                    className="m-auto content-center p-16 shadow">
+                    className="m-auto content-center p-16 shadow"
+                >
                     <InputField<LoginFormModel>
                         name="userName"
                         placeholder="Username"

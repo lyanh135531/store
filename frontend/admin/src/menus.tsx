@@ -1,6 +1,6 @@
 import React from 'react';
 import { MenuProps } from 'antd';
-import { Icons } from '@/core/icons/icon';
+import { Icons } from '@/core/icons';
 
 export type MenuItem = Required<MenuProps>['items'][number];
 

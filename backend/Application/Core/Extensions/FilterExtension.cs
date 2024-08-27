@@ -1,11 +1,46 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
 using Application.Core.DTOs;
+using Domain.Core;
 
 namespace Application.Core.Extensions;
 
 public static class FilterExtension
 {
+    public static IQueryable<T> ApplySearchKey<T>(this IQueryable<T> queryable, string? searchKey)
+    {
+        if (string.IsNullOrEmpty(searchKey)) return queryable;
+
+        var parameter = Expression.Parameter(typeof(T), "x");
+        Expression? predicate = null;
+
+        foreach (var property in typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                     .Where(prop => Attribute.IsDefined(prop, typeof(EnableSearch))))
+        {
+            var propertyAccess = Expression.Property(parameter, property);
+            var searchExpression = Expression.Call(
+                propertyAccess,
+                typeof(string).GetMethod("Contains", [typeof(string)])!,
+                Expression.Constant(searchKey)
+            );
+
+            if (predicate == null)
+            {
+                predicate = searchExpression;
+            }
+            else
+            {
+                predicate = Expression.OrElse(predicate, searchExpression);
+            }
+        }
+
+        if (predicate == null)
+            return queryable;
+
+        var lambda = Expression.Lambda<Func<T, bool>>(predicate, parameter);
+        return queryable.Where(lambda);
+    }
+
     public static IQueryable<T> ApplyPaginatedFilter<T>(this IQueryable<T> query, PaginatedListQuery queryFilter)
     {
         if (queryFilter.Filters.Count == 0) return query;
@@ -13,8 +48,6 @@ public static class FilterExtension
         var parameter = Expression.Parameter(typeof(T), "x");
 
         var combinedExpression = GetExpression<T>(queryFilter, parameter);
-
-        if (combinedExpression is null) return query;
 
         var lambda = Expression.Lambda<Func<T, bool>>(combinedExpression, parameter);
 

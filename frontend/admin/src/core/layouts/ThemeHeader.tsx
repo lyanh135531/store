@@ -1,5 +1,5 @@
 import BaseDropdown from '@/core/components/common/BaseDropdown';
-import { Icons } from '@/core/icons/icon';
+import { Icons } from '@/core/icons';
 import { Theme, useTheme } from '@/core/providers/ThemeProvider';
 import { MenuProps } from 'antd';
 import React from 'react';

@@ -1,4 +1,5 @@
 using Application.Core.DTOs;
+using Application.Core.Extensions;
 using Application.Core.Services;
 using Application.Ums.DTOs;
 using AutoMapper;
@@ -87,7 +88,8 @@ public class UserService(
 
         var queryable = await Repository.GetQueryableAsync();
         queryable = queryable
-            .Where(x => !userAdminId.Contains(x.Id));
+            .Where(x => !userAdminId.Contains(x.Id))
+            .ApplySearchKey(query.SearchKey);
 
         var total = await queryable.CountAsync(cancellationToken);
 

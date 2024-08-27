@@ -1,4 +1,4 @@
-import { Icons } from '@/core/icons/icon';
+import { Icons } from '@/core/icons';
 import { menus } from '@/menus';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';

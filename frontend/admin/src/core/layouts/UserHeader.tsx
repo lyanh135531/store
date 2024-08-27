@@ -1,4 +1,4 @@
-import { Icons } from '@/core/icons/icon';
+import { Icons } from '@/core/icons';
 import { useLogout } from '@/hooks/authQuery';
 import useAuthStore from '@/stores/authStore';
 import { UserOutlined } from '@ant-design/icons';

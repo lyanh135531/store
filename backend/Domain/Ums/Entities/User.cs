@@ -6,8 +6,16 @@ namespace Domain.Ums.Entities;
 
 public class User : IdentityUser<Guid>, IEntity<Guid>
 {
+    [EnableSearch]
     public override required string UserName { get; set; }
+    
+    [EnableSearch]
     public override required string Email { get; set; }
+    
+    [EnableSearch]
+    public override string? PhoneNumber { get; set; }
+
+    [EnableSearch]
     public string? FullName { get; set; }
     public Gender Gender { get; set; }
     public DateTime? DateOfBirth { get; set; }

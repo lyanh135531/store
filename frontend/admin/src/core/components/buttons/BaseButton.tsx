@@ -7,7 +7,19 @@ interface BaseButtonProps extends ButtonProps {
 }
 
 const BaseButton: React.FC<BaseButtonProps> = ({ className, variants = 'default', ...props }) => {
-    return <Button className={clsx('h-9 px-4', className)} type={variants} {...props} />;
+    return (
+        <Button
+            className={clsx(
+                'h-8 px-4',
+                {
+                    '!w-8': !props.children
+                },
+                className
+            )}
+            type={variants}
+            {...props}
+        />
+    );
 };
 
 export default BaseButton;

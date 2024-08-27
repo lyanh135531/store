@@ -1,27 +1,22 @@
 import { BreadcrumbItem } from '@/hooks/useBreadcrumb';
 import { Breadcrumb } from 'antd';
-import _ from 'lodash';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 interface Props {
     menuItems: BreadcrumbItem[];
 }
 
 const BaseBreadcrumb: React.FC<Props> = ({ menuItems }) => {
-    const renderBreadcrumb = (item: BreadcrumbItem) => {
-        if (item.href && !_.lastIndexOf(menuItems, item)) {
-            return <a href={item.href}>{item.title}</a>;
-        }
-        return item.title;
-    };
+    const breadcrumbItems = menuItems.map((item, index) => {
+        const isLastItem = index === menuItems.length - 1;
+        return {
+            key: index,
+            title: item.href && !isLastItem ? <Link to={item.href}>{item.title}</Link> : item.title
+        };
+    });
 
-    return (
-        <Breadcrumb>
-            {menuItems.map((item, index) => (
-                <Breadcrumb.Item key={index}>{renderBreadcrumb(item)}</Breadcrumb.Item>
-            ))}
-        </Breadcrumb>
-    );
+    return <Breadcrumb items={breadcrumbItems} />;
 };
 
 export default BaseBreadcrumb;
