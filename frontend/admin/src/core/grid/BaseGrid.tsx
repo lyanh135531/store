@@ -169,7 +169,7 @@ const BaseGrid = <T extends Entity>({
     const DisplayItems = useMemo(() => {
         if (!total) return null;
         return (
-            <div className="absolute bottom-0 flex gap-1 p-4 text-slate-400 items-center">
+            <div className="absolute bottom-0 flex gap-1 p-4 text-main-tertiary dark:text-dark-main-tertiary items-center">
                 {t('table.display', { start, end, total })}
             </div>
         );

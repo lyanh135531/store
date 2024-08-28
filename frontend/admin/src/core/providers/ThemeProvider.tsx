@@ -1,3 +1,6 @@
+import { darkTheme } from '@/themes/darkTheme';
+import { lightTheme } from '@/themes/lightTheme';
+import { ThemeConfig } from 'antd';
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 export type Theme = 'dark' | 'light';
@@ -11,11 +14,13 @@ type ThemeProviderProps = {
 type ThemeProviderState = {
     theme: Theme;
     setTheme: (theme: Theme) => void;
+    themeTokens: ThemeConfig;
 };
 
 const initialState: ThemeProviderState = {
     theme: 'light',
-    setTheme: () => null
+    setTheme: () => null,
+    themeTokens: lightTheme
 };
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
@@ -23,12 +28,15 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 export function ThemeProvider({
     children,
     defaultTheme = 'light',
-    storageKey = 'app-ui-theme',
+    storageKey = 'theme',
     ...props
 }: ThemeProviderProps) {
     const [theme, setTheme] = useState<Theme>(
         () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
     );
+    console.log('theme:', theme);
+
+    const themeTokens = theme === 'dark' ? darkTheme : lightTheme;
 
     useEffect(() => {
         const root = window.document.documentElement;
@@ -43,9 +51,10 @@ export function ThemeProvider({
             setTheme: (newTheme: Theme) => {
                 localStorage.setItem(storageKey, newTheme);
                 setTheme(newTheme);
-            }
+            },
+            themeTokens
         }),
-        [theme]
+        [theme, themeTokens]
     );
 
     return (

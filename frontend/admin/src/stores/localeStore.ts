@@ -12,17 +12,37 @@ export enum LocaleKey {
     vi = 'vi'
 }
 
+const getStoredLocale = (): Locale => {
+    const storedLocale = localStorage.getItem('locale');
+    switch (storedLocale) {
+        case LocaleKey.en:
+            return enUS;
+        case LocaleKey.vi:
+            return viVN;
+        default:
+            return enUS;
+    }
+};
+
 const useLocaleStore = create<LocaleState>((set) => ({
-    locale: enUS,
+    locale: getStoredLocale(),
     setLocale: (localeKey: LocaleKey) => {
+        let newLocale: Locale;
+
         switch (localeKey) {
             case LocaleKey.en:
-                set({ locale: enUS });
+                newLocale = enUS;
                 break;
             case LocaleKey.vi:
-                set({ locale: viVN });
+                newLocale = viVN;
+                break;
+            default:
+                newLocale = enUS;
                 break;
         }
+
+        localStorage.setItem('locale', localeKey);
+        set({ locale: newLocale });
     }
 }));
 

@@ -38,7 +38,8 @@ const UserPage: React.FC = () => {
                 url: GRID_API
             }}
             toolbarConfig={{
-                search: true
+                search: true,
+                create: true
             }}
             columns={columns}
         />

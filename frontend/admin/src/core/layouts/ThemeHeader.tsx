@@ -23,7 +23,7 @@ const ThemeHeader: React.FC = () => {
 
     return (
         <BaseDropdown
-            className="p-2 rounded-full hover:bg-main-hover"
+            className="p-2 rounded-full hover:bg-main-fill-tertiary dark:hover:bg-dark-main-fill-tertiary dark:text-dark-main-secondary"
             defaultSelectedKeys={[theme]}
             items={items}
             onClick={({ key }) => setTheme(key as Theme)}

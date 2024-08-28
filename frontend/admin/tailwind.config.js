@@ -15,18 +15,23 @@ module.exports = {
         },
         extend: {
             backgroundColor: {
-                'main-hover': '#0000000f',
+                'main-fill-tertiary': 'rgba(0, 0, 0, 0.04)',
 
-                'main-color-1': '#131629',
-                'main-color-2': '#161d40',
-                'main-color-3': '#1c2755',
-                'main-color-4': '#203175',
-                'main-color-5': '#263ea0',
-                'main-color-6': '#2b4acb',
-                'main-color-7': '#5273e0',
-                'main-color-8': '#7f9ef3',
-                'main-color-9': '#a8c1f8',
-                'main-color-10': '#d2e0fa'
+                'dark-main-primary': '#171717',
+                'dark-main-surface-primary': '#212121',
+                'dark-main-surface-secondary': '#2f2f2f',
+                'dark-main-fill-tertiary': 'rgba(255, 255, 255, 0.08)'
+            },
+            textColor: {
+                'main-primary': 'rgba(0, 0, 0, 0.88)',
+                'main-secondary': 'rgba(0, 0, 0, 0.65)',
+                'main-tertiary': 'rgba(0, 0, 0, 0.45)',
+                'main-quaternary': 'rgba(0, 0, 0, 0.25)',
+
+                'dark-main-primary': 'rgba(255, 255, 255, 0.85)',
+                'dark-main-secondary': 'rgba(255, 255, 255, 0.65)',
+                'dark-main-tertiary': 'rgba(255, 255, 255, 0.45)',
+                'dark-main-quaternary': 'rgba(255, 255, 255, 0.25)'
             },
             boxShadow: {
                 main: '0px 0px 10px 0px rgba(0, 0, 0, 0.02)',

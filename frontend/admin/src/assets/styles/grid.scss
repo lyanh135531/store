@@ -1,8 +1,4 @@
 .base-table {
-    .ant-table-thead > tr > th {
-        background: white;
-    }
-
     .ant-spin-nested-loading,
     .ant-spin-container {
         width: 100%;
@@ -19,7 +15,7 @@
         }
     }
 
-    .ant-table-body {
+    .ant-table-tbody {
         scrollbar-width: auto;
         scrollbar-color: auto;
 

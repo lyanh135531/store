@@ -1,14 +1,17 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
 import App from '@/App';
+import { ThemeProvider } from '@/core/providers/ThemeProvider';
 import '@/index.scss';
 import reportWebVitals from '@/reportWebVitals';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 import './i18n';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
     <React.Fragment>
-        <App />
+        <ThemeProvider>
+            <App />
+        </ThemeProvider>
     </React.Fragment>
 );
 

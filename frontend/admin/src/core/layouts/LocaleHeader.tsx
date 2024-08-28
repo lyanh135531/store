@@ -27,12 +27,14 @@ const LocaleHeader: React.FC = () => {
 
     return (
         <BaseDropdown
-            className="p-2 rounded-full hover:bg-main-hover cursor-pointer"
+            className="p-2 rounded-full hover:bg-main-fill-tertiary dark:hover:bg-dark-main-fill-tertiary dark:text-dark-main-secondary"
             defaultSelectedKeys={[locale === enUS ? LocaleKey.en : LocaleKey.vi]}
             items={items}
             onClick={({ key }) => {
-                changeLanguage(key);
-                setLocale(key as LocaleKey);
+                if (key in LocaleKey) {
+                    changeLanguage(key);
+                    setLocale(key as LocaleKey);
+                }
             }}
         >
             <Icons.Global />

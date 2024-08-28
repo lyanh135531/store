@@ -58,7 +58,7 @@ const BaseLayout: React.FC = () => {
             </Sider>
 
             <div className="flex flex-col flex-1">
-                <div className="p-4 flex justify-end items-center bg-white">
+                <div className="p-4 flex justify-end items-center bg-white dark:bg-dark-main-primary">
                     <div className="flex items-center gap-4">
                         <LocaleHeader />
                         <ThemeHeader />
@@ -66,15 +66,15 @@ const BaseLayout: React.FC = () => {
                     </div>
                 </div>
 
-                <Content className="relative flex-1">
+                <Content className="relative flex-1 dark:bg-dark-main-surface-secondary">
                     <div className="absolute px-20 top-0 left-0 flex flex-col gap-4 w-full h-full pt-4 pb-0 shadow-main-inner">
                         <BaseBreadcrumb menuItems={breadcrumbItems} />
-                        <div className="bg-white flex-1 w-full h-full rounded-lg shadow-main overflow-hidden">
+                        <div className="bg-white flex-1 w-full h-full rounded-lg shadow-main overflow-hidden dark:bg-dark-main-primary">
                             <Outlet />
                         </div>
                     </div>
                 </Content>
-                <Footer className="self-center px-0 py-2 w-full text-center">
+                <Footer className="self-center px-0 py-2 w-full text-center dark:bg-dark-main-surface-secondary dark:text-dark-main-secondary">
                     Store ©2024 Created by Lian ❤️
                 </Footer>
             </div>

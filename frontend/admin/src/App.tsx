@@ -1,5 +1,5 @@
 import '@/App.scss';
-import { ThemeProvider } from '@/core/providers/ThemeProvider';
+import { useTheme } from '@/core/providers/ThemeProvider';
 import AppRoutes from '@/routes';
 import useLocaleStore from '@/stores/localeStore';
 import queryClient from '@/utils/queryClient';
@@ -10,16 +10,15 @@ import { BrowserRouter } from 'react-router-dom';
 
 const App: React.FC = () => {
     const { locale } = useLocaleStore();
+    const { themeTokens } = useTheme();
 
     return (
         <BrowserRouter>
-            <ThemeProvider>
-                <ConfigProvider locale={locale}>
-                    <QueryClientProvider client={queryClient}>
-                        <AppRoutes />
-                    </QueryClientProvider>
-                </ConfigProvider>
-            </ThemeProvider>
+            <ConfigProvider locale={locale} theme={themeTokens}>
+                <QueryClientProvider client={queryClient}>
+                    <AppRoutes />
+                </QueryClientProvider>
+            </ConfigProvider>
         </BrowserRouter>
     );
 };
