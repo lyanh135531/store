@@ -1,10 +1,15 @@
 {
     "menu": {
-        "home": "Trang chủ",
-        "product": "Sản phẩm",
-        "category": "Danh mục",
-        "user": "Người dùng",
-        "setting": "Cài đặt"
+        "home": "Trang Chủ",
+        "product": "Sản Phẩm",
+        "category": "Danh Mục",
+        "user": "Người Dùng",
+        "setting": "Cài Đặt"
+    },
+    "button": {
+        "create": "Tạo Mới",
+        "cancel": "Hủy Bỏ",
+        "save": "Lưu"
     },
     "theme": {
         "light": "Sáng",
@@ -15,20 +20,21 @@
         "vi": "Tiếng Việt"
     },
     "header": {
-        "information": "Thông tin",
-        "changePassword": "Đổi mật khẩu",
-        "logout": "Đăng xuất"
+        "information": "Thông Tin",
+        "changePassword": "Đổi Mật Khẩu",
+        "logout": "Đăng Xuất"
     },
     "table": {
         "no": "STT",
         "display": "Hiển thị từ {{start}} đến {{end}} trong tổng số {{total}} mục",
-        "search": "Tìm kiếm"
+        "search": "Tìm Kiếm"
     },
     "user": {
-        "userName": "Tên đăng nhập",
-        "fullName": "Họ và tên",
+        "userName": "Tên Người Dùng",
+        "fullName": "Họ Và Tên",
         "email": "Email",
-        "phone": "Số điện thoại",
-        "gender": "Giới tính"
+        "phone": "Điện Thoại",
+        "gender": "Giới Tính",
+        "edit": "Chỉnh sửa người dùng"
     }
 }

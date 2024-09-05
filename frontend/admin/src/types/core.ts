@@ -1,7 +1,12 @@
 import { Identifier } from 'typescript';
 
 export interface Entity {
-    id: Identifier | string;
+    id: Identifier;
+}
+
+export interface BaseFormProps {
+    onSuccess?: () => void;
+    onClose?: () => void;
 }
 
 export enum Gender {

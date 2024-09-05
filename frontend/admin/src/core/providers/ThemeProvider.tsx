@@ -34,7 +34,6 @@ export function ThemeProvider({
     const [theme, setTheme] = useState<Theme>(
         () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
     );
-    console.log('theme:', theme);
 
     const themeTokens = theme === 'dark' ? darkTheme : lightTheme;
 

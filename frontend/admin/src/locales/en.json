@@ -6,6 +6,11 @@
         "user": "User",
         "setting": "Setting"
     },
+    "button": {
+        "create": "Create",
+        "cancel": "Cancel",
+        "save": "Save"
+    },
     "theme": {
         "light": "Light",
         "dark": "Dark"
@@ -29,6 +34,7 @@
         "fullName": "Full Name",
         "email": "Email",
         "phone": "Phone",
-        "gender": "Gender"
+        "gender": "Gender",
+        "edit": "Edit user"
     }
 }

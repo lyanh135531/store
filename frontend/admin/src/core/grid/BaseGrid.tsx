@@ -8,10 +8,18 @@ import { ApiResponse, PaginatedList } from '@/types/auth';
 import { Entity } from '@/types/core';
 import { ApiUtil } from '@/utils/apiUtil';
 import { useQuery } from '@tanstack/react-query';
-import { Divider, Table, TablePaginationConfig, TableProps } from 'antd';
+import { Table, TablePaginationConfig, TableProps } from 'antd';
 import { t } from 'i18next';
 import _ from 'lodash';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+    forwardRef,
+    useCallback,
+    useEffect,
+    useImperativeHandle,
+    useMemo,
+    useRef,
+    useState
+} from 'react';
 
 interface ToolbarConfig {
     search?: boolean;
@@ -29,7 +37,7 @@ interface ApiProps {
     pageSize?: number;
 }
 
-interface BaseGridProps<T> extends Omit<TableProps<T>, 'pagination' | 'loading'> {
+interface BaseGridProps<T extends Entity> extends Omit<TableProps<T>, 'pagination' | 'loading'> {
     gridKey: string;
     columns: TableProps<T>['columns'];
     pagination?: boolean;
@@ -38,16 +46,23 @@ interface BaseGridProps<T> extends Omit<TableProps<T>, 'pagination' | 'loading'>
     indexColumn?: boolean;
 }
 
-const BaseGrid = <T extends Entity>({
-    columns = [],
-    rowKey,
-    pagination = true,
-    toolbarConfig,
-    api = { pageSize: 10 },
-    gridKey,
-    indexColumn = true,
-    ...restProps
-}: BaseGridProps<T>) => {
+export interface BaseGridRef {
+    reload: () => void;
+}
+
+const BaseGrid = <T extends Entity>(
+    {
+        columns = [],
+        rowKey,
+        pagination = true,
+        toolbarConfig,
+        api = { pageSize: 10 },
+        gridKey,
+        indexColumn = true,
+        ...restProps
+    }: BaseGridProps<T>,
+    ref: React.Ref<BaseGridRef>
+) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [scrollState, setScrollState] = useMergeState<TableProps<T>['scroll']>({});
     const [paginationState, setPaginationState] = useMergeState<PaginationGrid>({
@@ -81,6 +96,10 @@ const BaseGrid = <T extends Entity>({
         queryFn: fetchData,
         enabled: !!api?.url
     });
+
+    useImperativeHandle(ref, () => ({
+        reload: refetch
+    }));
 
     const total = data?.result?.total || 0;
     const start = (paginationState.current - 1) * paginationState.pageSize + 1;
@@ -146,7 +165,7 @@ const BaseGrid = <T extends Entity>({
     const Toolbar = useMemo(() => {
         if (!toolbarConfig) return null;
         return (
-            <div className="base-table-toolbar p-6 flex justify-between">
+            <div className="base-table-toolbar p-6 pb-3 flex justify-between">
                 {toolbarConfig.search && (
                     <BaseInput
                         placeholder={t('table.search')}
@@ -158,7 +177,7 @@ const BaseGrid = <T extends Entity>({
                 <div>
                     {toolbarConfig.create && (
                         <BaseButton variants="primary" icon={<Icons.PlusCircle />}>
-                            Create
+                            {t('button.create')}
                         </BaseButton>
                     )}
                 </div>
@@ -198,31 +217,32 @@ const BaseGrid = <T extends Entity>({
             {isLoading ? (
                 <SkeletonLoader />
             ) : (
-                <>
-                    <Divider className="m-0" />
-                    <Table
-                        className="base-table w-full h-full flex-1"
-                        dataSource={data?.result?.items}
-                        columns={columnsWithIndex}
-                        rowKey={rowKey || ((record) => _.toString(record.id))}
-                        pagination={
-                            pagination
-                                ? {
-                                      ...paginationState,
-                                      onChange: handlePageChange,
-                                      showSizeChanger: true,
-                                      onShowSizeChange: handlePageChange
-                                  }
-                                : false
-                        }
-                        scroll={scrollState}
-                        {...restProps}
-                    />
-                </>
+                <Table
+                    className="base-table w-full h-full flex-1"
+                    dataSource={data?.result?.items}
+                    columns={columnsWithIndex}
+                    rowKey={rowKey || ((record) => _.toString(record.id))}
+                    pagination={
+                        pagination
+                            ? {
+                                  ...paginationState,
+                                  onChange: handlePageChange,
+                                  showSizeChanger: true,
+                                  onShowSizeChange: handlePageChange
+                              }
+                            : false
+                    }
+                    scroll={scrollState}
+                    {...restProps}
+                />
             )}
             {pagination && DisplayItems}
         </div>
     );
 };
 
-export default BaseGrid;
+BaseGrid.displayName = 'BaseGrid';
+
+export default forwardRef(BaseGrid) as <T extends Entity>(
+    props: BaseGridProps<T> & { ref?: React.Ref<BaseGridRef> }
+) => JSX.Element;

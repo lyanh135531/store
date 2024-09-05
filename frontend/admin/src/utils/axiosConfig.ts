@@ -12,6 +12,7 @@ axiosInstance.defaults.withCredentials = true;
 
 const handleRedirectLogin = () => {
     localStorage.removeItem('user');
+    window.location.href = '/login'
 };
 
 axiosInstance.interceptors.response.use(

@@ -7,6 +7,9 @@ export const darkTheme: ThemeConfig = {
         },
         Menu: {
             darkItemBg: '#171717'
+        },
+        Table: {
+            headerBg: '#171717'
         }
     },
     token: {
