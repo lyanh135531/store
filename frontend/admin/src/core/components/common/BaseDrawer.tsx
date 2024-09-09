@@ -46,6 +46,7 @@ const BaseDrawer = React.forwardRef<BaseDrawerRef, BaseDrawerProps>((props, ref)
             placement="right"
             closable={false}
             destroyOnClose
+            maskClosable={false}
             onClose={() => setState({ open: false })}
             open={state.open}
             width={widthMapping[state.width || 'default']}

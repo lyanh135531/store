@@ -12,6 +12,7 @@ public class UserUpdateDto : IEntityDto<Guid>
     public string? PhoneNumber { get; set; }
     public required string Gender { get; set; }
     public DateTime? DateOfBirth { get; set; }
+    public bool Status { get; set; }
 }
 
 public class UserUpdateValidator : AbstractValidator<UserUpdateDto>

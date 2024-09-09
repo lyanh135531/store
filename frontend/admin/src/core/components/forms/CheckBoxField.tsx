@@ -21,7 +21,7 @@ const CheckboxField = <T,>({
     ...props
 }: CheckboxFieldProps<T>) => {
     return (
-        <Form.Item name={name as string} valuePropName="checked" label={label} noStyle={noStyle}>
+        <Form.Item name={String(name)} valuePropName="checked" label={label} noStyle={noStyle}>
             <Checkbox checked={checked} onChange={onChange} {...props}>
                 {children}
             </Checkbox>

@@ -12,15 +12,13 @@ axiosInstance.defaults.withCredentials = true;
 
 const handleRedirectLogin = () => {
     localStorage.removeItem('user');
-    window.location.href = '/login'
+    window.location.href = '/login';
 };
 
 axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response && error.response.status === 401) {
-            handleRedirectLogin();
-        } else if (error.request) {
             handleRedirectLogin();
         }
         return Promise.reject(error);

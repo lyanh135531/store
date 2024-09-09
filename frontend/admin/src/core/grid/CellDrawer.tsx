@@ -7,8 +7,10 @@ interface Props {
 
 const CellDrawer: React.FC<Props> = ({ value, onClick }) => {
     return (
-        <div className="cursor-pointer hover:underline" onClick={onClick}>
-            {value}
+        <div>
+            <span className="cursor-pointer hover:text-main-color-primary" onClick={onClick}>
+                {value}
+            </span>
         </div>
     );
 };

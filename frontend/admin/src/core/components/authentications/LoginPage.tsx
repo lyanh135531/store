@@ -53,14 +53,14 @@ const LoginPage: React.FC = () => {
                     <InputField<LoginFormModel>
                         name="userName"
                         placeholder="Username"
-                        rules={[{ required: true, message: 'Please input your Username!' }]}
+                        required
                         icon={<Icons.User />}
                         autoComplete="username"
                     />
                     <InputField<LoginFormModel>
                         name="password"
                         placeholder="Password"
-                        rules={[{ required: true, message: 'Please input your Password!' }]}
+                        required
                         type="password"
                         icon={<Icons.Lock />}
                         autoComplete="current-password"

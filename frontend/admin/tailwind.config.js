@@ -27,6 +27,7 @@ module.exports = {
                 'main-secondary': 'rgba(0, 0, 0, 0.65)',
                 'main-tertiary': 'rgba(0, 0, 0, 0.45)',
                 'main-quaternary': 'rgba(0, 0, 0, 0.25)',
+                'main-color-primary': '#0c8e9c',
 
                 'dark-main-primary': 'rgba(255, 255, 255, 0.85)',
                 'dark-main-secondary': 'rgba(255, 255, 255, 0.65)',

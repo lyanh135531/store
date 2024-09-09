@@ -8,101 +8,125 @@ using Newtonsoft.Json;
 
 namespace Application.Core.Services;
 
-public class
-    AppServiceBase<TEntity, TKey, TListDto, TDetailDto, TCreateDto, TUpdateDto>(
-        IRepository<TEntity, TKey> repository,
-        IDistributedCache distributedCache,
-        IMapper mapper)
-    : IAppServiceBase<TKey, TListDto,
-        TDetailDto, TCreateDto, TUpdateDto>
+public class AppServiceBase<TEntity, TKey, TListDto, TDetailDto, TCreateDto, TUpdateDto>(
+    IRepository<TEntity, TKey> repository,
+    IDistributedCache distributedCache,
+    IMapper mapper)
+    : IAppServiceBase<TKey, TListDto, TDetailDto, TCreateDto, TUpdateDto>
     where TEntity : class, IEntity<TKey>
     where TCreateDto : class
     where TUpdateDto : class, IEntityDto<TKey>
     where TDetailDto : class
 {
     protected readonly IRepository<TEntity, TKey> Repository = repository;
+    private readonly CacheService _cacheService = new(distributedCache);
 
-    private const string ListCacheKey = $"{nameof(TEntity)}ListCache";
-    private const string DetailCacheKey = $"{nameof(TEntity)}DetailCache";
-
-    public virtual async Task<PaginatedList<TListDto>> GetListAsync(PaginatedListQuery query,
+    public virtual async Task<PaginatedList<TListDto>> GetListAsync(
+        PaginatedListQuery query,
         CancellationToken cancellationToken = default)
     {
-        var entitiesCache = await distributedCache.GetStringAsync(ListCacheKey, cancellationToken);
-        if (!string.IsNullOrEmpty(entitiesCache))
-        {
-            return JsonConvert.DeserializeObject<PaginatedList<TListDto>>(entitiesCache);
-        }
+        var cacheKey = $"{typeof(TEntity).Name}ListCache";
+        var cachedList = await _cacheService.GetCachedDataAsync<PaginatedList<TListDto>>(cacheKey, cancellationToken)
+            .ConfigureAwait(false);
 
-        var queryable = await Repository.GetQueryableAsync();
+        if (cachedList is not null)
+            return cachedList;
+
+        var queryable = await Repository.GetQueryableAsync().ConfigureAwait(false);
         queryable = queryable.ApplyPaginatedFilter(query);
-        var total = await queryable.CountAsync(cancellationToken: cancellationToken);
+        var total = await queryable.CountAsync(cancellationToken).ConfigureAwait(false);
         var entities = await queryable
             .ApplyPaginatedListQuery(query)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+
         var result = mapper.Map<List<TEntity>, List<TListDto>>(entities);
         var paginatedList = new PaginatedList<TListDto>(result, total, query.Offset, query.Limit);
-        var valueCache = JsonConvert.SerializeObject(paginatedList);
-        await SetCaching(ListCacheKey, valueCache, cancellationToken);
+
+        await _cacheService.SetCacheAsync(cacheKey, paginatedList, cancellationToken).ConfigureAwait(false);
         return paginatedList;
     }
 
     public virtual async Task<TDetailDto> GetDetailAsync(TKey id, CancellationToken cancellationToken = default)
     {
-        var entityCache = await distributedCache.GetStringAsync(DetailCacheKey, cancellationToken);
-        if (!string.IsNullOrEmpty(entityCache))
-        {
-            return JsonConvert.DeserializeObject<TDetailDto>(entityCache);
-        }
+        var cacheKey = $"{typeof(TEntity).Name}{id}DetailCache";
+        var cachedDetail = await _cacheService.GetCachedDataAsync<TDetailDto>(cacheKey, cancellationToken)
+            .ConfigureAwait(false);
 
-        var entity = await Repository.FindAsync(id, cancellationToken: cancellationToken);
+        if (cachedDetail is not null)
+            return cachedDetail;
+
+        var entity = await Repository.FindAsync(id, cancellationToken: cancellationToken).ConfigureAwait(false);
+        if (entity is null)
+            throw new KeyNotFoundException($"Entity with id {id} not found.");
+
         var result = mapper.Map<TEntity, TDetailDto>(entity);
-        var valueCache = JsonConvert.SerializeObject(result);
-        await SetCaching(DetailCacheKey, valueCache, cancellationToken);
-        return result ?? throw new Exception("Not Found!");
+        await _cacheService.SetCacheAsync(cacheKey, result, cancellationToken).ConfigureAwait(false);
+        return result;
     }
 
     public virtual async Task<TDetailDto> UpdateAsync(TUpdateDto updateDto)
     {
-        var queryable = await Repository.GetQueryableAsync();
-        var entity = await queryable.FirstOrDefaultAsync(x => x.Id.Equals(updateDto.Id));
-        if (entity is null) throw new Exception("Not Found");
+        var queryable = await Repository.GetQueryableAsync().ConfigureAwait(false);
+        var entity = await queryable.FirstOrDefaultAsync(x => x.Id != null && x.Id.Equals(updateDto.Id))
+            .ConfigureAwait(false);
+
+        if (entity is null)
+            throw new KeyNotFoundException($"Entity with id {updateDto.Id} not found.");
 
         mapper.Map(updateDto, entity);
-        var entityNew = await Repository.UpdateAsync(entity, true);
-        var result = mapper.Map<TEntity, TDetailDto>(entityNew);
-        await RemoveCaching();
+        var updatedEntity = await Repository.UpdateAsync(entity, true).ConfigureAwait(false);
+        var result = mapper.Map<TEntity, TDetailDto>(updatedEntity);
+        await InvalidateCacheAsync(updateDto.Id).ConfigureAwait(false);
         return result;
     }
 
     public virtual async Task<TDetailDto> CreateAsync(TCreateDto createDto)
     {
         var entity = mapper.Map<TCreateDto, TEntity>(createDto);
-        var entityNew = await Repository.AddAsync(entity, true);
-        var result = mapper.Map<TEntity, TDetailDto>(entityNew);
-        await RemoveCaching();
+        var createdEntity = await Repository.AddAsync(entity, true).ConfigureAwait(false);
+        var result = mapper.Map<TEntity, TDetailDto>(createdEntity);
+        await InvalidateCacheAsync(default!).ConfigureAwait(false);
         return result;
     }
 
     public virtual async Task<TDetailDto> DeleteAsync(TKey id)
     {
-        var entity = await Repository.DeleteAsync(id, true);
+        var entity = await Repository.DeleteAsync(id, true).ConfigureAwait(false);
         var result = mapper.Map<TEntity, TDetailDto>(entity);
-        await RemoveCaching();
+        await InvalidateCacheAsync(id).ConfigureAwait(false);
         return result;
     }
 
-    private async Task SetCaching(string cacheKey, string value, CancellationToken cancellationToken)
+    private async Task InvalidateCacheAsync(TKey id)
     {
-        var options = new DistributedCacheEntryOptions()
-            .SetAbsoluteExpiration(DateTime.Now.AddMinutes(10))
-            .SetSlidingExpiration(TimeSpan.FromMinutes(5));
-        await distributedCache.SetStringAsync(cacheKey, value, options, cancellationToken);
+        await _cacheService.RemoveCacheAsync($"{typeof(TEntity).Name}ListCache").ConfigureAwait(false);
+        await _cacheService.RemoveCacheAsync($"{typeof(TEntity).Name}{id}DetailCache").ConfigureAwait(false);
     }
 
-    private async Task RemoveCaching()
+    private class CacheService(IDistributedCache distributedCache)
     {
-        await distributedCache.RemoveAsync(ListCacheKey);
-        await distributedCache.RemoveAsync(DetailCacheKey);
+        public async Task SetCacheAsync<T>(string cacheKey, T value, CancellationToken cancellationToken)
+        {
+            var options = new DistributedCacheEntryOptions()
+                .SetAbsoluteExpiration(DateTime.Now.AddMinutes(10))
+                .SetSlidingExpiration(TimeSpan.FromMinutes(5));
+
+            var serializedValue = JsonConvert.SerializeObject(value);
+            await distributedCache.SetStringAsync(cacheKey, serializedValue, options, cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        public async Task<T?> GetCachedDataAsync<T>(string cacheKey, CancellationToken cancellationToken)
+        {
+            var cachedData = await distributedCache.GetStringAsync(cacheKey, cancellationToken)
+                .ConfigureAwait(false);
+            return string.IsNullOrEmpty(cachedData) ? default : JsonConvert.DeserializeObject<T>(cachedData);
+        }
+
+        public async Task RemoveCacheAsync(string cacheKey)
+        {
+            await distributedCache.RemoveAsync(cacheKey).ConfigureAwait(false);
+        }
     }
 }

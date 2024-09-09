@@ -28,6 +28,7 @@ public class EmailService(
     {
         var rootPath = hostEnvironment.ContentRootPath;
         var template = await File.ReadAllTextAsync($"{rootPath}/Templates/{sendMailDto.TemplateName}.mjml");
+        if (sendMailDto.ReplaceDto == null) return;
         var email = template.ReplaceParams(sendMailDto.ReplaceDto);
 
         var mjmlRenderResult = mjmlRenderer.Render(email);
@@ -52,11 +53,10 @@ public class EmailService(
                 HtmlContent = mjmlRenderResult.Html,
                 ToEmail = sendMailDto.To,
             }, true);
-            
+
             using var client = new SmtpClient();
             try
             {
-                
                 await client.ConnectAsync(_smtpSettings.Host, _smtpSettings.Port,
                     SecureSocketOptions.StartTls);
                 await client.AuthenticateAsync(_smtpSettings.ApiKey, _smtpSettings.ApiSecretKey);

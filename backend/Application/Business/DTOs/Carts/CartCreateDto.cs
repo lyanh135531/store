@@ -2,5 +2,5 @@
 
 public class CartCreateDto
 {
-    public List<CartDetailCreateDto> CartDetails { get; set; }
+    public List<CartDetailCreateDto> CartDetails { get; set; } = [];
 }

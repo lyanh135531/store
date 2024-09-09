@@ -1,4 +1,5 @@
 import { notification } from 'antd';
+import { t } from 'i18next';
 
 class NotifyUtil {
     static openNotification(
@@ -11,7 +12,7 @@ class NotifyUtil {
             message,
             description,
             duration,
-            placement: 'topRight',
+            placement: 'bottomRight',
             showProgress: true,
             pauseOnHover: true,
             className: 'base-notification'
@@ -19,19 +20,19 @@ class NotifyUtil {
     }
 
     static success(message: string, description?: string, duration?: number): void {
-        NotifyUtil.openNotification('success', message, description, duration);
+        NotifyUtil.openNotification('success', t(message), t(description || ''), duration);
     }
 
     static info(message: string, description?: string, duration?: number): void {
-        NotifyUtil.openNotification('info', message, description, duration);
+        NotifyUtil.openNotification('info', t(message), t(description || ''), duration);
     }
 
     static warning(message: string, description?: string, duration?: number): void {
-        NotifyUtil.openNotification('warning', message, description, duration);
+        NotifyUtil.openNotification('warning', t(message), t(description || ''), duration);
     }
 
     static error(message: string, description?: string, duration?: number): void {
-        NotifyUtil.openNotification('error', message, description, duration);
+        NotifyUtil.openNotification('error', t(message), t(description || ''), duration);
     }
 }
 

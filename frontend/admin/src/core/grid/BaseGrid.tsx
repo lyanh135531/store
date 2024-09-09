@@ -24,6 +24,7 @@ import React, {
 interface ToolbarConfig {
     search?: boolean;
     create?: boolean;
+    onCreate?: () => void;
 }
 
 interface PaginationGrid extends Omit<TablePaginationConfig, 'pageSize' | 'current'> {
@@ -176,7 +177,11 @@ const BaseGrid = <T extends Entity>(
                 )}
                 <div>
                     {toolbarConfig.create && (
-                        <BaseButton variants="primary" icon={<Icons.PlusCircle />}>
+                        <BaseButton
+                            variants="primary"
+                            icon={<Icons.PlusCircle />}
+                            onClick={toolbarConfig.onCreate}
+                        >
                             {t('button.create')}
                         </BaseButton>
                     )}
@@ -228,6 +233,7 @@ const BaseGrid = <T extends Entity>(
                                   ...paginationState,
                                   onChange: handlePageChange,
                                   showSizeChanger: true,
+                                  locale: { items_per_page: '' },
                                   onShowSizeChange: handlePageChange
                               }
                             : false

@@ -1,3 +1,8 @@
-export const NOTIFY_TITLE = 'Notification';
+export const NOTIFY_TITLE = 'notification.title';
 
-export const UNAUTHORIZED_ERROR = 'Invalid username or password';
+export const UNAUTHORIZED_ERROR = 'login.invalid';
+
+export const UPDATE_FAILED = 'notification.updateFailed';
+export const UPDATE_SUCCESS = 'notification.updateSuccess';
+
+export const CREATE_SUCCESS = 'notification.createSuccess';

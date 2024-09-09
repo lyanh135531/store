@@ -29,12 +29,38 @@
         "display": "Displaying {{start}} to {{end}} of {{total}} entries",
         "search": "Search"
     },
+    "component": {
+        "requiredMessage": "{{label}} is required!",
+        "selectPlaceholder": "Select {{label}}",
+        "datePlaceholder": "Select date",
+        "noOptions": "No options available",
+        "active": "Active",
+        "inactive": "Inactive",
+        "invalidPhoneNumber": "Invalid phone number"
+    },
+    "notification": {
+        "title": "Notification",
+        "updateSuccess": "Update successfully!",
+        "updateFailed": "Update failed!",
+        "createSuccess": "Create successfully!",
+        "createFailed": "Create failed!",
+        "deleteSuccess": "Delete successfully!",
+        "deleteFailed": "Delete failed!"
+    },
     "user": {
+        "edit": "Edit user",
+        "create": "Create user",
         "userName": "User Name",
         "fullName": "Full Name",
         "email": "Email",
         "phone": "Phone",
         "gender": "Gender",
-        "edit": "Edit user"
+        "dateOfBirth": "Date of birth",
+        "status": "Status",
+        "password": "Password",
+        "confirmPassword": "Confirm Password"
+    },
+    "login": {
+        "invalid": "Invalid username or password"
     }
 }

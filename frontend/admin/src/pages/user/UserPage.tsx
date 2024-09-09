@@ -1,6 +1,7 @@
 import BaseDrawer, { BaseDrawerRef } from '@/core/components/common/BaseDrawer';
 import BaseGrid, { BaseGridRef } from '@/core/grid/BaseGrid';
 import CellDrawer from '@/core/grid/CellDrawer';
+import CellStatus from '@/core/grid/CellStatus';
 import PageContainer from '@/core/layouts/PageContainer';
 import { GRID_API } from '@/pages/user/apis';
 import UserForm from '@/pages/user/components/UserForm';
@@ -13,7 +14,7 @@ const UserPage: React.FC = () => {
     const drawerRef = useRef<BaseDrawerRef>(null);
     const gridRef = useRef<BaseGridRef>(null);
 
-    const handleClick = ({ id }: UserDto) => {
+    const onUserNameClick = ({ id }: UserDto) => {
         drawerRef.current?.open({
             component: (
                 <UserForm
@@ -24,7 +25,23 @@ const UserPage: React.FC = () => {
                         drawerRef.current?.close();
                     }}
                 />
-            )
+            ),
+            width: 'medium'
+        });
+    };
+
+    const onCreate = () => {
+        drawerRef.current?.open({
+            component: (
+                <UserForm
+                    onClose={drawerRef.current?.close}
+                    onSuccess={() => {
+                        gridRef.current?.reload();
+                        drawerRef.current?.close();
+                    }}
+                />
+            ),
+            width: 'medium'
         });
     };
 
@@ -33,7 +50,7 @@ const UserPage: React.FC = () => {
             title: t('user.userName'),
             dataIndex: 'userName',
             render: (value, record, index) => (
-                <CellDrawer key={index} value={value} onClick={() => handleClick(record)} />
+                <CellDrawer key={index} value={value} onClick={() => onUserNameClick(record)} />
             )
         },
         {
@@ -45,14 +62,15 @@ const UserPage: React.FC = () => {
             dataIndex: 'email'
         },
         {
-            title: t('user.gender'),
-            dataIndex: 'gender',
-            width: 100
-        },
-        {
             title: t('user.phone'),
             dataIndex: 'phoneNumber',
             width: 150
+        },
+        {
+            title: t('user.status'),
+            dataIndex: 'status',
+            width: 120,
+            render: (value) => <CellStatus value={value} />
         }
     ];
 
@@ -66,7 +84,8 @@ const UserPage: React.FC = () => {
                 }}
                 toolbarConfig={{
                     search: true,
-                    create: true
+                    create: true,
+                    onCreate: onCreate
                 }}
                 columns={columns}
             />

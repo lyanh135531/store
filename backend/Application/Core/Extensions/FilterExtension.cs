@@ -48,15 +48,17 @@ public static class FilterExtension
         var parameter = Expression.Parameter(typeof(T), "x");
 
         var combinedExpression = GetExpression<T>(queryFilter, parameter);
+        
+        if (combinedExpression is null) return query;
 
         var lambda = Expression.Lambda<Func<T, bool>>(combinedExpression, parameter);
 
         return query.Where(lambda);
     }
 
-    private static Expression GetExpression<T>(PaginatedListQuery queryFilter, ParameterExpression parameter)
+    private static Expression? GetExpression<T>(PaginatedListQuery queryFilter, ParameterExpression parameter)
     {
-        Expression combinedExpression = null;
+        Expression? combinedExpression = null;
         foreach (var filter in queryFilter.Filters)
         {
             var property = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
@@ -79,7 +81,7 @@ public static class FilterExtension
                     $"Value '{filter.Value}' cannot be converted to type '{property.PropertyType.Name}'");
             }
 
-            Expression comparison;
+            Expression? comparison;
             switch (filter.Operator)
             {
                 case Operator.Equals:
