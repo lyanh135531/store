@@ -32,7 +32,7 @@ interface ActionRowItem<T> {
     type?: 'detail' | 'edit' | 'delete';
     icon?: JSX.Element;
     label?: string;
-    onClick?: (value: unknown, record?: T, index?: number) => void;
+    onClick?: (record?: T, index?: number) => void;
 }
 
 interface ActionRow<T> {
@@ -62,8 +62,14 @@ interface BaseGridProps<T extends Entity> extends Omit<TableProps<T>, 'paginatio
     actionRow?: ActionRow<T>;
 }
 
+type State = {
+    loadingGrid: boolean;
+};
+
 export interface BaseGridRef {
     reload: () => void;
+    mask: () => void;
+    unmask: () => void;
 }
 
 const BaseGrid = <T extends Entity>(
@@ -88,6 +94,7 @@ const BaseGrid = <T extends Entity>(
     });
     const [searchKey, setSearchKey] = useState<string>('');
     const { locale } = useLocaleStore();
+    const [state, setState] = useMergeState<State>({ loadingGrid: false });
 
     const fetchData = async () => {
         try {
@@ -114,8 +121,18 @@ const BaseGrid = <T extends Entity>(
         enabled: !!api?.url
     });
 
+    const mask = () => {
+        setState({ loadingGrid: true });
+    };
+
+    const unmask = () => {
+        setState({ loadingGrid: false });
+    };
+
     useImperativeHandle(ref, () => ({
-        reload: refetch
+        reload: refetch,
+        mask: mask,
+        unmask: unmask
     }));
 
     const total = data?.result?.total || 0;
@@ -244,7 +261,7 @@ const BaseGrid = <T extends Entity>(
             resultColumns.push({
                 title: t('table.action'),
                 key: 'action',
-                render: (value, record, index) => {
+                render: (_value, record, index) => {
                     if (isMoreButton) {
                         const menu: MenuProps['items'] = actionRow.items.map((item, itemIndex) => {
                             return {
@@ -268,7 +285,7 @@ const BaseGrid = <T extends Entity>(
                                     key={itemIndex}
                                     icon={item.icon || defaultIcons[item.type as string]}
                                     type="text"
-                                    onClick={() => item.onClick?.(value, record, index)}
+                                    onClick={() => item.onClick?.(record, index)}
                                 />
                             ))}
                         </div>
@@ -290,6 +307,7 @@ const BaseGrid = <T extends Entity>(
                 <Table
                     className="base-table w-full h-full flex-1"
                     dataSource={data?.result?.items}
+                    loading={state.loadingGrid}
                     columns={columnsCustom}
                     rowKey={rowKey || ((record) => _.toString(record.id))}
                     pagination={

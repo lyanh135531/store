@@ -26,7 +26,7 @@ export class ApiUtil {
                 return axiosInstance.put<T>(url, data, config);
 
             case 'DELETE':
-                return axiosInstance.delete<T>(url);
+                return axiosInstance.delete<T>(url, config);
 
             default:
                 return Promise.reject(new Error(`Unsupported method: ${method}`));
