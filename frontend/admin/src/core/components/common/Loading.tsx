@@ -34,7 +34,7 @@ const Loading: React.FC<LoadingProps> = ({
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                    backgroundColor: '#fbfbfb21',
                     zIndex: 1000
                 }}
             >

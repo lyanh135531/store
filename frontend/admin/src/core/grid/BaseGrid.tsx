@@ -1,4 +1,5 @@
 import BaseButton from '@/core/components/buttons/BaseButton';
+import BaseDropdown from '@/core/components/common/BaseDropdown';
 import BaseInput from '@/core/components/common/BaseInput';
 import SkeletonLoader from '@/core/components/common/BaseSkeleton';
 import { Icons } from '@/core/icons';
@@ -8,7 +9,7 @@ import { ApiResponse, PaginatedList } from '@/types/auth';
 import { Entity } from '@/types/core';
 import { ApiUtil } from '@/utils/apiUtil';
 import { useQuery } from '@tanstack/react-query';
-import { Table, TablePaginationConfig, TableProps } from 'antd';
+import { MenuProps, Table, TablePaginationConfig, TableProps } from 'antd';
 import { t } from 'i18next';
 import _ from 'lodash';
 import React, {
@@ -25,6 +26,19 @@ interface ToolbarConfig {
     search?: boolean;
     create?: boolean;
     onCreate?: () => void;
+}
+
+interface ActionRowItem<T> {
+    type?: 'detail' | 'edit' | 'delete';
+    icon?: JSX.Element;
+    label?: string;
+    onClick?: (value: unknown, record?: T, index?: number) => void;
+}
+
+interface ActionRow<T> {
+    width?: number;
+    pin?: boolean;
+    items: ActionRowItem<T>[];
 }
 
 interface PaginationGrid extends Omit<TablePaginationConfig, 'pageSize' | 'current'> {
@@ -45,6 +59,7 @@ interface BaseGridProps<T extends Entity> extends Omit<TableProps<T>, 'paginatio
     toolbarConfig?: ToolbarConfig;
     api?: ApiProps;
     indexColumn?: boolean;
+    actionRow?: ActionRow<T>;
 }
 
 export interface BaseGridRef {
@@ -60,6 +75,7 @@ const BaseGrid = <T extends Entity>(
         api = { pageSize: 10 },
         gridKey,
         indexColumn = true,
+        actionRow,
         ...restProps
     }: BaseGridProps<T>,
     ref: React.Ref<BaseGridRef>
@@ -199,21 +215,70 @@ const BaseGrid = <T extends Entity>(
         );
     }, [total, start, end, locale]);
 
-    const columnsWithIndex = useMemo(() => {
+    const columnsCustom = useMemo(() => {
+        const resultColumns = columns;
         if (indexColumn) {
-            return [
-                {
-                    title: t('table.no'),
-                    key: 'index',
-                    render: (_, __, index: number) =>
-                        (paginationState.current - 1) * paginationState.pageSize + index + 1,
-                    width: 50
-                },
-                ...columns
-            ];
+            resultColumns.unshift({
+                title: t('table.no'),
+                key: 'index',
+                render: (_, __, index: number) =>
+                    (paginationState.current - 1) * paginationState.pageSize + index + 1,
+                width: 50
+            });
         }
-        return columns;
-    }, [columns, indexColumn]);
+        if (actionRow) {
+            const defaultIcons: Record<string, JSX.Element> = {
+                detail: <Icons.Eye />,
+                edit: <Icons.Edit />,
+                delete: <Icons.Delete />
+            };
+
+            const defaultLabel: Record<string, string> = {
+                detail: 'button.detail',
+                edit: 'button.edit',
+                delete: 'button.delete'
+            };
+
+            const isMoreButton = actionRow.items?.length > 3;
+
+            resultColumns.push({
+                title: t('table.action'),
+                key: 'action',
+                render: (value, record, index) => {
+                    if (isMoreButton) {
+                        const menu: MenuProps['items'] = actionRow.items.map((item, itemIndex) => {
+                            return {
+                                key: itemIndex,
+                                label: item.label || t(defaultLabel[item.type as string]),
+                                icon: item.icon || defaultIcons[item.type as string]
+                            };
+                        });
+
+                        return (
+                            <BaseDropdown overlayClassName="w-36" items={menu}>
+                                <BaseButton icon={<Icons.More />} type="text" />
+                            </BaseDropdown>
+                        );
+                    }
+
+                    return (
+                        <div className="flex space-x-2">
+                            {actionRow.items.map((item, itemIndex) => (
+                                <BaseButton
+                                    key={itemIndex}
+                                    icon={item.icon || defaultIcons[item.type as string]}
+                                    type="text"
+                                    onClick={() => item.onClick?.(value, record, index)}
+                                />
+                            ))}
+                        </div>
+                    );
+                },
+                width: isMoreButton ? 80 : 120
+            });
+        }
+        return resultColumns;
+    }, [columns, indexColumn, actionRow]);
 
     return (
         <div ref={containerRef} className="relative w-full h-full flex flex-col">
@@ -225,7 +290,7 @@ const BaseGrid = <T extends Entity>(
                 <Table
                     className="base-table w-full h-full flex-1"
                     dataSource={data?.result?.items}
-                    columns={columnsWithIndex}
+                    columns={columnsCustom}
                     rowKey={rowKey || ((record) => _.toString(record.id))}
                     pagination={
                         pagination

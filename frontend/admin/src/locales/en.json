@@ -9,7 +9,10 @@
     "button": {
         "create": "Create",
         "cancel": "Cancel",
-        "save": "Save"
+        "save": "Save",
+        "detail": "Detail",
+        "edit": "Edit",
+        "delete": "Delete"
     },
     "theme": {
         "light": "Light",
@@ -27,7 +30,8 @@
     "table": {
         "no": "No",
         "display": "Displaying {{start}} to {{end}} of {{total}} entries",
-        "search": "Search"
+        "search": "Search",
+        "action": "Action"
     },
     "component": {
         "requiredMessage": "{{label}} is required!",

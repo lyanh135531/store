@@ -36,6 +36,7 @@ module.exports = {
             },
             boxShadow: {
                 main: '0px 0px 10px 0px rgba(0, 0, 0, 0.02)',
+                primary: '0px 0px 10px 0px rgba(0, 0, 0, 0.1)',
                 'main-inner': 'inset 0 2px 10px 0 rgb(0 0 0 / 0.02)'
             }
         }

@@ -91,7 +91,7 @@ export const darkTheme: ThemeConfig = {
         colorErrorOutline: '#2a1215',
         controlItemBgActive: '#111e21',
         controlItemBgActiveHover: '#0f2e33',
-        fontFamily: 'IBM Plex Mono',
+        fontFamily: 'Open Sans',
         fontSize: 14,
         lineWidth: 1,
         borderRadius: 8,

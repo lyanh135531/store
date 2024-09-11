@@ -10,7 +10,7 @@ export const lightTheme: ThemeConfig = {
         colorTextBase: '#000',
         colorTextLightSolid: '#ffffff',
         colorBgBase: '#ffffff',
-        fontFamily: 'IBM Plex Mono',
+        fontFamily: 'Open Sans',
         fontSize: 14,
         lineWidth: 1,
         borderRadius: 8,

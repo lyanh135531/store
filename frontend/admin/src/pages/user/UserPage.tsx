@@ -88,6 +88,28 @@ const UserPage: React.FC = () => {
                     onCreate: onCreate
                 }}
                 columns={columns}
+                actionRow={{
+                    items: [
+                        {
+                            type: 'detail',
+                            onClick: (value, record) => {
+                                console.log('View detail of', record);
+                            }
+                        },
+                        {
+                            type: 'edit',
+                            onClick: (value, record) => {
+                                console.log('Edit', record);
+                            }
+                        },
+                        {
+                            type: 'delete',
+                            onClick: (value, record) => {
+                                console.log('Delete', record);
+                            }
+                        }
+                    ]
+                }}
             />
             <BaseDrawer ref={drawerRef} />
         </PageContainer>
